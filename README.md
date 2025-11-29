@@ -205,7 +205,7 @@ Hello|
 
 ---
 
-Использование в значении `w` текущего размера терминала
+Using the `w` value for the current terminal size
 
 ```zig
 const ztui = @import("ztui")
@@ -215,10 +215,12 @@ pub fn main() !void {
 
     win.draw();
 }
-```
+````
 
-### Разбор
+-----
 
-#### try ztui.getTerminalWidth();
+### Analysis
 
-Это функция которая не принимает агрументы, зато возрввщает текущий размер терминала.
+#### try ztui.getTerminalWidth()
+
+This is a function that takes no arguments but returns the current size (width) of the terminal.
