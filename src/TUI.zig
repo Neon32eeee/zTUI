@@ -25,7 +25,7 @@ pub const TUI = struct {
     const Self = @This();
 
     pub fn init(setting: TUISettings, allocator: std.mem.Allocator) !Self {
-        if (setting.w >= 155) return error.InvalidWethg;
+        if (setting.w > (try @import("Termimal.zig").getTerminalSize(std.io.getStdOut())).?.width) return error.InvalidWethg;
         if (setting.w <= 0) return error.InvalidWethg;
 
         const rows = std.ArrayList(std.ArrayList([]const u8)).init(allocator);
