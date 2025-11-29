@@ -20,6 +20,31 @@ Installation via fetch
 zig fetch --save https://github.com/Neon32eeee/zTUI/archive/refs/tags/0.0.1.tar.gz
 ```
 
+add for build.zig
+```zig
+const std = @import("std");
+
+pub fn build(b: *std.Build) void {
+    const target = b.standardTargetOptions(.{});
+    const optimize = b.standardOptimizeOption(.{});
+
+    const exe = b.addExecutable(.{
+        .name = "myproject",
+        .root_source_file = b.path("src/main.zig"),
+        .target = target,
+        .optimize = optimize,
+    });
+
++    const ztui = b.dependency("ztui", .{
++        .target = target,
++        .optimize = optimize,
++    });
+
++    exe.root_module.addImport("ztui", ztui.module("ztui"));
+
+    b.installArtifact(exe);
+```
+
 ## Project API
 Basic script for a standard window
 ```
@@ -39,7 +64,7 @@ pub fn main() !void {
 
 Here we declare a constant into which we initialize our application window. The `init` function itself accepts two arguments. The first is the settings, which is a structure with the following fields:
 
-- `w` - this controls the **width** of the window. It should not be set higher than 155 to avoid overloading the terminal. The default is 90.
+- `w` - this controls the **width** of the window. It should not be set higher than size terminal to avoid overloading the terminal. The default is 90.
 
 - `h` - this is the **height** of our window. The default is 10.
 
@@ -177,3 +202,23 @@ Hello|
 │                            │
 ╰────────────────────────────╯
 ```
+
+---
+
+Использование в значении `w` текущего размера терминала
+
+```zig
+const ztui = @import("ztui")
+
+pub fn main() !void {
+    const win = ztui.tui().init(.{.w = try ztui.getTerminalWidth()});
+
+    win.draw();
+}
+```
+
+### Разбор
+
+#### try ztui.getTerminalWidth();
+
+Это функция которая не принимает агрументы, зато возрввщает текущий размер терминала.
