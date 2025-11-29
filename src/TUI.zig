@@ -3,8 +3,8 @@ const Input = @import("Input.zig");
 const Word = @import("Word.zig");
 
 pub const TUISettings = struct {
-    w: usize = 100,
-    h: usize = 25,
+    w: usize = 90,
+    h: usize = 10,
     name: []const u8 = "zTUI",
 };
 
@@ -15,6 +15,7 @@ pub const TUI = struct {
     h: usize,
     name: []const u8,
     enablve_input: bool,
+    allocator: std.mem.Allocator,
 
     rows: std.ArrayList(std.ArrayList([]const u8)),
 
@@ -29,7 +30,7 @@ pub const TUI = struct {
 
         const rows = std.ArrayList(std.ArrayList([]const u8)).init(allocator);
 
-        const self = Self{ .w = setting.w, .h = setting.h, .name = setting.name, .enablve_input = false, .rows = rows, .promt = ""};
+        const self = Self{ .w = setting.w, .h = setting.h, .name = setting.name, .enablve_input = false, .rows = rows, .promt = "", .allocator = allocator};
 
         return self;
     }
@@ -64,8 +65,8 @@ pub const TUI = struct {
         return result;
     }
 
-    pub fn append_row(self: *Self, row: []const u8, allocator: std.mem.Allocator) !void {
-        const text = try Word.wrapText(self.w - 2, row, allocator);
+    pub fn append_row(self: *Self, row: []const u8) !void {
+        const text = try Word.wrapText(self.w - 2, row, self.allocator);
 
         try self.rows.append(text);
     }

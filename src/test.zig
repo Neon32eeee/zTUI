@@ -1,9 +1,8 @@
 const std = @import("std");
 const ztui = @import("main.zig");
-const Word = @import("Word.zig");
 
 pub fn main() !void {
-    var win = try ztui.tui().init(.{.w = 30}, std.heap.page_allocator);
+    var win = try ztui.tui().init(.{.w = 30, .h = 10}, std.heap.page_allocator);
     defer win.deinit();
 
     win.input_init(.{.promt = "Hello"});
@@ -14,7 +13,7 @@ pub fn main() !void {
     const answer = try win.hearing(&buff);
 
     if (std.mem.eql(u8, answer, "hi")) {
-        try win.append_row("zTUI test text!", std.heap.page_allocator);
+        try win.append_row("zTUI test text!");
         win.draw();
 
     }
