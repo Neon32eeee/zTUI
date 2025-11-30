@@ -95,6 +95,14 @@ pub const TUI = struct {
         try self.num_rows.append(numbered);
     }
 
+    pub fn clear_row(self: Self) void {
+        self.rows.clearAndFree();
+    }
+
+    pub fn clear_num_row(self: Self) void {
+        self.num_rows.clearAndFree();
+    }
+
     fn displayWidth(slice: []const u8) usize {
         var width: usize = 0;
         var i: usize = 0;
