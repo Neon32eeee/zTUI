@@ -38,7 +38,7 @@ pub const TUI = struct {
     }
 
     pub fn deinit(self: *Self) void {
-        const allocator = self.rows.allocator;
+        const allocator = self.allocator;
 
         for (self.rows.items) |row_list| {
             for (row_list.items) |line| {
@@ -49,6 +49,14 @@ pub const TUI = struct {
         }
 
         self.rows.deinit();
+
+        for (self.num_rows.items) |num_row_list| {
+            for (num-row_list.items) |line| {
+                allocator.free(line);
+            }
+        }
+
+        self.num_rows.deinit();
     }
 
     pub fn input_init(self: *Self, setting: InputSettings) void {
