@@ -51,7 +51,7 @@ pub const TUI = struct {
         self.rows.deinit();
 
         for (self.num_rows.items) |num_row_list| {
-            for (num-row_list.items) |line| {
+            for (num_row_list.items) |line| {
                 allocator.free(line);
             }
         }
