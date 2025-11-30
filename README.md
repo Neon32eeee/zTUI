@@ -133,6 +133,42 @@ The `append_row` method accepts 1 argument, which is the string we want to add. 
 
 ---
 
+Пример с нумерованными строками
+```zig
+const std =@import("std");
+const ztui = @import("ztui");
+
+pub fn main() !void {
+    var win = try ztui.tui().init(.{.w = 20, .h = 10}, std.heap.page_allocator);
+    defer win.deinit();
+
+    try win.append_num_row("zTUI test text!");
+
+    win.draw();
+}
+```
+### Анализ
+
+#### try win.append_num_row("zTUI test text!");
+Тут мы вызываем метод который делает почти тоже что и протсто `win.append_row` только дабавляет в `num_rows`, в `draw` оно будет отображатся в виде строки начинаю с 1, и стоит уточнить что у `num_rows` приоретет меньше чем у `rows` в плане отрисовкею
+
+### Ожидаемый ввывод
+```
+╭──────────────────╮
+│zTUI              │
+│1.zTUI test text! │
+│                  │
+│                  │
+│                  │
+│                  │
+│                  │
+│                  │
+│                  │
+│                  │
+╰──────────────────╯
+```
+---
+
 Example with the user input system
 
 ```
