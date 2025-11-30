@@ -263,3 +263,7 @@ pub fn main() !void {
 #### try ztui.getTerminalWidth()
 
 This is a function that takes no arguments but returns the current size (width) of the terminal.
+
+## TODO
+
+- [ ] Add func clear_row and clear_num_row
