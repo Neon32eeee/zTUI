@@ -30,22 +30,22 @@ pub const TUI = struct {
 
         const rows = std.ArrayList(std.ArrayList([]const u8)).init(allocator);
 
-        const self = Self{ .w = setting.w, .h = setting.h, .name = setting.name, .enablve_input = false, .rows = rows, .promt = "", .allocator = allocator};
+        const self = Self{ .w = setting.w, .h = setting.h, .name = setting.name, .enablve_input = false, .rows = rows, .promt = "", .allocator = allocator };
 
         return self;
     }
 
     pub fn deinit(self: *Self) void {
-        const allocator = self.rows.allocator; 
+        const allocator = self.rows.allocator;
 
         for (self.rows.items) |row_list| {
             for (row_list.items) |line| {
-                allocator.free(line); 
+                allocator.free(line);
             }
 
             row_list.deinit();
         }
-    
+
         self.rows.deinit();
     }
 
@@ -78,7 +78,7 @@ pub const TUI = struct {
             width += 1;
         }
         return width;
-}
+    }
 
     pub fn draw(self: *const Self) void {
         std.debug.print("z\x1B[2J\x1B[3J\x1B[H", .{});
@@ -96,38 +96,23 @@ pub const TUI = struct {
         }
         std.debug.print("│\n", .{});
 
-        var last_row_id: usize = 0;
-        var last_line_id: usize = 0;
-        for (0..(self.h - 1)) |_| {
-            std.debug.print("│", .{});
-            if (last_row_id < self.rows.items.len) {
-                const row_list = self.rows.items[last_row_id];
-                if (last_line_id < row_list.items.len) {
-                    const print_line = row_list.items[last_line_id];
-                    std.debug.print("{s}", .{print_line});
-                   
-                    const print_line_len = displayWidth(print_line);
-                    if (print_line_len < self.w - 2) {
-                        for (print_line_len..self.w - 2) |_| {
-                            std.debug.print(" ", .{});
-                        }
-                    }
+        var printed_lines: usize = 0;
 
-                    last_line_id += 1;
-                } else {
-                    for (0..(self.w - 2)) |_| {
-                        std.debug.print(" ", .{});
-                    }
-
-                    last_row_id += 1;
-
-                    last_line_id = 0;
-                }
-            } else {
-                for (0..(self.w - 2)) |_| {
-                    std.debug.print(" ", .{});
-                }
+        for (self.rows.items) |row| {
+            if (printed_lines >= self.h - 2) break;
+            for (row.items) |line| {
+                if (printed_lines >= self.h - 2) break;
+                std.debug.print("│{s}", .{line});
+                const len = displayWidth(line);
+                for (len..self.w - 2) |_| std.debug.print(" ", .{});
+                std.debug.print("│\n", .{});
+                printed_lines += 1;
             }
+        }
+
+        while (printed_lines < self.h - 2) : (printed_lines += 1) {
+            std.debug.print("│", .{});
+            for (0..self.w - 2) |_| std.debug.print(" ", .{});
             std.debug.print("│\n", .{});
         }
 
