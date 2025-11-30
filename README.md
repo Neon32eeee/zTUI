@@ -176,7 +176,7 @@ Example with the user input system
 
 ```
 const std = @import("std");
-const ztui = @import("main.zig");
+const ztui = @import("ztui");
 
 pub fn main() !void {
     var win = try ztui.tui().init(.{.w = 30, .h = 10}, std.heap.page_allocator);
