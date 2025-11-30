@@ -18,6 +18,7 @@ pub const TUI = struct {
     allocator: std.mem.Allocator,
 
     rows: std.ArrayList(std.ArrayList([]const u8)),
+    num_rows: std.ArrayList(std.ArrayList([]const u8)),
 
     promt: []const u8,
     input_enty: Input.Input = Input.Input.init(),
@@ -29,8 +30,9 @@ pub const TUI = struct {
         if (setting.w <= 0) return error.InvalidWethg;
 
         const rows = std.ArrayList(std.ArrayList([]const u8)).init(allocator);
+        const num_rows = std.ArrayList(std.ArrayList([]const u8)).init(allocator);
 
-        const self = Self{ .w = setting.w, .h = setting.h, .name = setting.name, .enablve_input = false, .rows = rows, .promt = "", .allocator = allocator };
+        const self = Self{ .w = setting.w, .h = setting.h, .name = setting.name, .enablve_input = false, .rows = rows, .num_rows = num_rows, .promt = "", .allocator = allocator };
 
         return self;
     }
