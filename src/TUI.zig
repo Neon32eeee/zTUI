@@ -73,6 +73,20 @@ pub const TUI = struct {
         try self.rows.append(text);
     }
 
+    pub fn append_num_row(self: *Self, row: []const u8) !void {
+        const wrapped = try Word.wrapText(self.w - 4, row, self.allocator);
+        var numbered = std.ArrayList([]const u8).init(self.allocator);
+
+        const idx = self.num_rows.items.len + 1;
+
+        for (wrapped.items) |line| {
+            const prefixed = try std.fmt.allocPrint(self.allocator, "{d}.{s}", .{ idx, line });
+            try numbered.append(prefixed);
+        }
+
+        try self.num_rows.append(numbered);
+    }
+
     fn displayWidth(slice: []const u8) usize {
         var width: usize = 0;
         var i: usize = 0;
