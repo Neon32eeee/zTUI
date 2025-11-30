@@ -74,7 +74,7 @@ pub const TUI = struct {
     }
 
     pub fn append_num_row(self: *Self, row: []const u8) !void {
-        const wrapped = try Word.wrapText(self.w - 4, row, self.allocator);
+        const wrapped = try Word.wrapText(self.w - 2, row, self.allocator);
         var numbered = std.ArrayList([]const u8).init(self.allocator);
 
         const idx = self.num_rows.items.len + 1;
