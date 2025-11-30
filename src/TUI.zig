@@ -126,6 +126,18 @@ pub const TUI = struct {
             }
         }
 
+        for (self.num_rows.items) |row| {
+            if (printed_lines >= self.h - 2) break;
+            for (row.items) |line| {
+                if (printed_lines >= self.h - 2) break;
+                std.debug.print("│{s}", .{line});
+                const len = displayWidth(line);
+                for (len..self.w - 2) |_| std.debug.print(" ", .{});
+                std.debug.print("│\n", .{});
+                printed_lines += 1;
+            }
+        }
+
         while (printed_lines < self.h - 2) : (printed_lines += 1) {
             std.debug.print("│", .{});
             for (0..self.w - 2) |_| std.debug.print(" ", .{});
