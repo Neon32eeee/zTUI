@@ -133,7 +133,7 @@ The `append_row` method accepts 1 argument, which is the string we want to add. 
 
 ---
 
-Пример с нумерованными строками
+Example with numbered lines  
 ```zig
 const std =@import("std");
 const ztui = @import("ztui");
@@ -147,12 +147,14 @@ pub fn main() !void {
     win.draw();
 }
 ```
-### Анализ
 
-#### try win.append_num_row("zTUI test text!");
-Тут мы вызываем метод который делает почти тоже что и протсто `win.append_row` только дабавляет в `num_rows`, в `draw` оно будет отображатся в виде строки начинаю с 1, и стоит уточнить что у `num_rows` приоретет меньше чем у `rows` в плане отрисовкею
+### Analysis
 
-### Ожидаемый ввывод
+#### `try win.append_num_row("zTUI test text!");`
+Here we call a method that works almost the same as `win.append_row`, but additionally places the text into `num_rows`. During `draw`, it will be displayed as a numbered line starting from 1.  
+It’s important to note that `num_rows` has lower priority than `rows` when rendering.
+
+### Expected output
 ```
 ╭──────────────────╮
 │zTUI              │
@@ -167,6 +169,7 @@ pub fn main() !void {
 │                  │
 ╰──────────────────╯
 ```
+
 ---
 
 Example with the user input system
