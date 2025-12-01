@@ -59,7 +59,7 @@ pub const TUI = struct {
         self.num_rows.deinit();
     }
 
-    pub fn input_init(self: *Self, setting: InputSettings) void {
+    pub fn inputInit(self: *Self, setting: InputSettings) void {
         self.enablve_input = true;
 
         self.promt = setting.promt;
@@ -75,13 +75,13 @@ pub const TUI = struct {
         return result;
     }
 
-    pub fn append_row(self: *Self, row: []const u8) !void {
+    pub fn appendRow(self: *Self, row: []const u8) !void {
         const text = try Word.wrapText(self.w - 2, row, self.allocator);
 
         try self.rows.append(text);
     }
 
-    pub fn append_num_row(self: *Self, row: []const u8) !void {
+    pub fn appendNumRow(self: *Self, row: []const u8) !void {
         const wrapped = try Word.wrapText(self.w - 2, row, self.allocator);
         var numbered = std.ArrayList([]const u8).init(self.allocator);
 
@@ -95,11 +95,11 @@ pub const TUI = struct {
         try self.num_rows.append(numbered);
     }
 
-    pub fn clear_row(self: Self) void {
+    pub fn clearRow(self: Self) void {
         self.rows.clearAndFree();
     }
 
-    pub fn clear_num_row(self: Self) void {
+    pub fn clearNumRow(self: Self) void {
         self.num_rows.clearAndFree();
     }
 
