@@ -284,17 +284,17 @@ This is a function that takes no arguments but returns the current size (width) 
 - w
 - h
 - name
-- enablve_input
+- enable_input
 - allocator
 - rows
 - num_rows
-- promt
-- input_enty
+- prompt
+- input_entry
 
 ## TODO
 
 - [x] Add func clear_row and clear_num_row
 - [x] Rename func
-- [ ] Rename paremeters
+- [x] Rename paremeters
 - [ ] Add row color set
 - [ ] Add func rename

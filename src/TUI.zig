@@ -8,20 +8,20 @@ pub const TUISettings = struct {
     name: []const u8 = "zTUI",
 };
 
-const InputSettings = struct { promt: []const u8 };
+const InputSettings = struct { prompt: []const u8 };
 
 pub const TUI = struct {
     w: usize,
     h: usize,
     name: []const u8,
-    enablve_input: bool,
+    enable_input: bool,
     allocator: std.mem.Allocator,
 
     rows: std.ArrayList(std.ArrayList([]const u8)),
     num_rows: std.ArrayList(std.ArrayList([]const u8)),
 
-    promt: []const u8,
-    input_enty: Input.Input = Input.Input.init(),
+    prompt: []const u8,
+    input_entry: Input.Input = Input.Input.init(),
 
     const Self = @This();
 
@@ -32,7 +32,7 @@ pub const TUI = struct {
         const rows = std.ArrayList(std.ArrayList([]const u8)).init(allocator);
         const num_rows = std.ArrayList(std.ArrayList([]const u8)).init(allocator);
 
-        const self = Self{ .w = setting.w, .h = setting.h, .name = setting.name, .enablve_input = false, .rows = rows, .num_rows = num_rows, .promt = "", .allocator = allocator };
+        const self = Self{ .w = setting.w, .h = setting.h, .name = setting.name, .enable_input = false, .rows = rows, .num_rows = num_rows, .input_entry = "", .allocator = allocator };
 
         return self;
     }
@@ -60,13 +60,13 @@ pub const TUI = struct {
     }
 
     pub fn inputInit(self: *Self, setting: InputSettings) void {
-        self.enablve_input = true;
+        self.enable_input = true;
 
-        self.promt = setting.promt;
+        self.prompt = setting.prompt;
     }
 
     pub fn hearing(self: *const Self, buffer: []u8) ![]const u8 {
-        const result = try self.input_enty.hearing(buffer);
+        const result = try self.input_entry.hearing(buffer);
 
         if (result.len == 0) {
             return "";
@@ -166,8 +166,8 @@ pub const TUI = struct {
         }
         std.debug.print("╯\n", .{});
 
-        if (self.enablve_input) {
-            std.debug.print("{s}| ", .{self.promt});
+        if (self.enable_input) {
+            std.debug.print("{s}| ", .{self.prompt});
         }
     }
 };
