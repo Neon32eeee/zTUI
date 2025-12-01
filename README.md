@@ -104,7 +104,7 @@ pub fn main() !void {
     var win = try ztui.tui().init(.{.w = 20, .h = 10}, std.heap.page_allocator);
     defer win.deinit();
 
-    try win.appendRow("zTUI test text!");
+    try win.appendRow("zTUI test text!", .{});
 
     win.draw();
 }
@@ -112,8 +112,14 @@ pub fn main() !void {
 
 ### Analysis
 
-#### `try win.appendRow("zTUI test text!");`
-The `appendRow` method accepts 1 argument, which is the string we want to add. First, it breaks the text and wraps words if necessary, but if a word is longer than the width itself, an error will be issued. It simply adds this edited string to `win.rows`, which stores these strings, and the `win.draw();` method renders them in order from the 0th element to the last.
+#### `try win.appendRow("zTUI test text!", .{});`
+The `appendRow` method accepts 2 argument, which is the string we want to add. First, it breaks the text and wraps words if necessary, but if a word is longer than the width itself, an error will be issued. It simply adds this edited string to `win.rows`, which stores these strings, and the `win.draw();` method renders them in order from the 0th element to the last. Второй аргумент отвечает за цвет, вот список всёх цветов:
+
+- `red`
+- `green`
+- `yellow`
+- `blue`
+
 
 ### Expected Output
 ```
@@ -142,7 +148,7 @@ pub fn main() !void {
     var win = try ztui.tui().init(.{.w = 20, .h = 10}, std.heap.page_allocator);
     defer win.deinit();
 
-    try win.appendNumRow("zTUI test text!");
+    try win.appendNumRow("zTUI test text!", .{});
 
     win.draw();
 }
@@ -150,7 +156,7 @@ pub fn main() !void {
 
 ### Analysis
 
-#### `try win.appendNumRow("zTUI test text!");`
+#### `try win.appendNumRow("zTUI test text!", .{});`
 Here we call a method that works almost the same as `win.appendRow`, but additionally places the text into `num_rows`. During `draw`, it will be displayed as a numbered line starting from 1.  
 It’s important to note that `num_rows` has lower priority than `rows` when rendering.
 
@@ -190,7 +196,7 @@ pub fn main() !void {
     const answer = try win.hearing(&buff);
 
     if (std.mem.eql(u8, answer, "hi")) {
-        try win.appendRow("input system works!");
+        try win.appendRow("input system works!", .{});
         win.draw();
     }
 
@@ -291,10 +297,10 @@ This is a function that takes no arguments but returns the current size (width) 
 - prompt
 - input_entry
 
-## TODO
+## TODO (0.0.3)
 
 - [x] Add func clear_row and clear_num_row
 - [x] Rename func
 - [x] Rename paremeters
-- [ ] Add row color set
+- [x] Add row color set
 - [ ] Add func rename
