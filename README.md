@@ -264,6 +264,37 @@ pub fn main() !void {
 
 This is a function that takes no arguments but returns the current size (width) of the terminal.
 
+---
+
+### All func and parameters 
+
+#### TUI 
+##### Func :
+- init
+- deinit
+- input_init
+- hearing
+- append_row
+- append_num_row
+- clear_row
+- clear_num_row
+- draw
+
+##### parameters :
+- w
+- h
+- mane
+- enablve_input
+- allocator
+- rows
+- num_rows
+- promt
+- input_enty
+- 
+
 ## TODO
 
-- [ ] Add func clear_row and clear_num_row
+- [x] Add func clear_row and clear_num_row
+- [ ] Rename func
+- [ ] Add row color set
+- [ ] Add func rename
