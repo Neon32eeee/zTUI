@@ -5,7 +5,7 @@ pub fn main() !void {
     var win = try ztui.tui().init(.{ .w = try ztui.getTerminalWidth(), .h = 10 }, std.heap.page_allocator);
     defer win.deinit();
 
-    win.input_init(.{ .prompt = "Hello" });
+    win.inputInit(.{ .prompt = "Hello" });
 
     win.draw();
 
@@ -13,7 +13,7 @@ pub fn main() !void {
     const answer = try win.hearing(&buff);
 
     if (std.mem.eql(u8, answer, "hi")) {
-        try win.appendRow("zTUI test text!");
+        try win.appendRow("zTUI test text!", .{ .color = .red });
         win.draw();
     }
 }
