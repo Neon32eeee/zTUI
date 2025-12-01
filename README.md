@@ -104,7 +104,7 @@ pub fn main() !void {
     var win = try ztui.tui().init(.{.w = 20, .h = 10}, std.heap.page_allocator);
     defer win.deinit();
 
-    try win.append_row("zTUI test text!");
+    try win.appendRow("zTUI test text!");
 
     win.draw();
 }
@@ -112,8 +112,8 @@ pub fn main() !void {
 
 ### Analysis
 
-#### `try win.append_row("zTUI test text!");`
-The `append_row` method accepts 1 argument, which is the string we want to add. First, it breaks the text and wraps words if necessary, but if a word is longer than the width itself, an error will be issued. It simply adds this edited string to `win.rows`, which stores these strings, and the `win.draw();` method renders them in order from the 0th element to the last.
+#### `try win.appendRow("zTUI test text!");`
+The `appendRow` method accepts 1 argument, which is the string we want to add. First, it breaks the text and wraps words if necessary, but if a word is longer than the width itself, an error will be issued. It simply adds this edited string to `win.rows`, which stores these strings, and the `win.draw();` method renders them in order from the 0th element to the last.
 
 ### Expected Output
 ```
@@ -142,7 +142,7 @@ pub fn main() !void {
     var win = try ztui.tui().init(.{.w = 20, .h = 10}, std.heap.page_allocator);
     defer win.deinit();
 
-    try win.append_num_row("zTUI test text!");
+    try win.appendNumRow("zTUI test text!");
 
     win.draw();
 }
@@ -150,8 +150,8 @@ pub fn main() !void {
 
 ### Analysis
 
-#### `try win.append_num_row("zTUI test text!");`
-Here we call a method that works almost the same as `win.append_row`, but additionally places the text into `num_rows`. During `draw`, it will be displayed as a numbered line starting from 1.  
+#### `try win.appendNumRow("zTUI test text!");`
+Here we call a method that works almost the same as `win.appendRow`, but additionally places the text into `num_rows`. During `draw`, it will be displayed as a numbered line starting from 1.  
 It’s important to note that `num_rows` has lower priority than `rows` when rendering.
 
 ### Expected output
@@ -182,7 +182,7 @@ pub fn main() !void {
     var win = try ztui.tui().init(.{.w = 30, .h = 10}, std.heap.page_allocator);
     defer win.deinit();
 
-    win.input_init(.{.promt = "Hello"});
+    win.inputInit(.{.promt = "Hello"});
 
     win.draw();
 
@@ -190,7 +190,7 @@ pub fn main() !void {
     const answer = try win.hearing(&buff);
 
     if (std.mem.eql(u8, answer, "hi")) {
-        try win.append_row("input system works!");
+        try win.appendRow("input system works!");
         win.draw();
     }
 
@@ -199,7 +199,7 @@ pub fn main() !void {
 
 ### Analysis
 
-#### 1.`win.input_init(.{.promt = "Hello"});`
+#### 1.`win.inputInit(.{.promt = "Hello"});`
 Here we initialize the input system so that we can listen for user input in the future. The method itself accepts input system settings, which include:
 
 - `promt` - this is the prompt for the user that appears at the end and next to the input field.
@@ -272,29 +272,29 @@ This is a function that takes no arguments but returns the current size (width) 
 ##### Func :
 - init
 - deinit
-- input_init
+- inputInit
 - hearing
-- append_row
-- append_num_row
-- clear_row
-- clear_num_row
+- appendRow
+- appendNumRow
+- clearRow
+- clearNumRow
 - draw
 
 ##### parameters :
 - w
 - h
-- mane
+- name
 - enablve_input
 - allocator
 - rows
 - num_rows
 - promt
 - input_enty
-- 
 
 ## TODO
 
 - [x] Add func clear_row and clear_num_row
-- [ ] Rename func
+- [x] Rename func
+- [ ] Rename paremeters
 - [ ] Add row color set
 - [ ] Add func rename
