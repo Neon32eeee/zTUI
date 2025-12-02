@@ -127,6 +127,10 @@ pub const TUI = struct {
         cleanupRows(&self.num_rows, self.allocator);
     }
 
+    pub fn rename(self: Self, new_name: []const u8) void {
+        self.name = new_name;
+    }
+
     fn displayWidth(slice: []const u8) usize {
         var width: usize = 0;
         var i: usize = 0;
