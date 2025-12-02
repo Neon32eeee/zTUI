@@ -119,15 +119,15 @@ pub const TUI = struct {
         rows_list.clearAndFree();
     }
 
-    pub fn clearRow(self: Self) void {
+    pub fn clearRow(self: *Self) void {
         cleanupRows(&self.rows, self.allocator);
     }
 
-    pub fn clearNumRow(self: Self) void {
+    pub fn clearNumRow(self: *Self) void {
         cleanupRows(&self.num_rows, self.allocator);
     }
 
-    pub fn rename(self: Self, new_name: []const u8) void {
+    pub fn rename(self: *Self, new_name: []const u8) void {
         self.name = new_name;
     }
 
