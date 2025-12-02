@@ -17,7 +17,7 @@ zTUI is an open-source library for TUI, with support for user input systems.
 ## How to Install
 Installation via fetch
 ```
-zig fetch --save https://github.com/Neon32eeee/zTUI/archive/refs/tags/0.0.2.tar.gz
+zig fetch --save https://github.com/Neon32eeee/zTUI/archive/refs/tags/0.0.3.tar.gz
 ```
 
 add for build.zig
@@ -298,13 +298,11 @@ This is a function that takes no arguments but returns the current size (width) 
 - prompt
 - input_entry
 
-## TODO (0.0.3)
+## TODO (0.0.4)
 
-- [x] Add func clear_row and clear_num_row
-- [x] Rename func
-- [x] Rename paremeters
-- [x] Add row color set
-- [x] Add func rename
+- [ ] Add set color prompt
+- [ ] Add func setRow and setNumRow
+- [ ] Add func 'reprompt'
 
 ## License
 
