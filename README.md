@@ -284,6 +284,7 @@ This is a function that takes no arguments but returns the current size (width) 
 - appendNumRow
 - clearRow
 - clearNumRow
+- rename
 - draw
 
 ##### parameters :
@@ -303,7 +304,7 @@ This is a function that takes no arguments but returns the current size (width) 
 - [x] Rename func
 - [x] Rename paremeters
 - [x] Add row color set
-- [ ] Add func rename
+- [x] Add func rename
 
 ## License
 
