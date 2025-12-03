@@ -40,7 +40,9 @@ pub fn build(b: *std.Build) void {
 +        .optimize = optimize,
 +    });
 
-+    exe.root_module.addImport("ztui", ztui.module("ztui"));
++    const ztui_module = b.addModule("ztui", .{ .root_source_file = ztui.path("src/main.zig") });
+
+    exe.root_module.addImport("ztui", ztui_module);
 
     b.installArtifact(exe);
 ```
