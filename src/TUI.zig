@@ -131,6 +131,10 @@ pub const TUI = struct {
         self.name = new_name;
     }
 
+    pub fn reprompt(self: *Self, new_prompt: []const u8) void {
+        self.prompt = new_prompt;
+    }
+
     fn displayWidth(slice: []const u8) usize {
         var width: usize = 0;
         var i: usize = 0;
