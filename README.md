@@ -287,6 +287,7 @@ This is a function that takes no arguments but returns the current size (width) 
 - clearRow
 - clearNumRow
 - rename
+- reprompt
 - draw
 
 ##### parameters :
@@ -304,7 +305,7 @@ This is a function that takes no arguments but returns the current size (width) 
 
 - [ ] Add set color prompt
 - [ ] Add func setRow and setNumRow
-- [ ] Add func 'reprompt'
+- [x] Add func 'reprompt'
 
 ## License
 
