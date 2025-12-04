@@ -190,7 +190,7 @@ pub fn main() !void {
     var win = try ztui.tui().init(.{.w = 30, .h = 10}, std.heap.page_allocator);
     defer win.deinit();
 
-    win.inputInit(.{.promt = "Hello"});
+    win.inputInit(.{.prompt = "Hello"});
 
     win.draw();
 
@@ -207,10 +207,11 @@ pub fn main() !void {
 
 ### Analysis
 
-#### 1.`win.inputInit(.{.promt = "Hello"});`
+#### 1.`win.inputInit(.{.prompt = "Hello"});`
 Here we initialize the input system so that we can listen for user input in the future. The method itself accepts input system settings, which include:
 
-- `promt` - this is the prompt for the user that appears at the end and next to the input field.
+- `prompt` - this is the prompt for the user that appears at the end and next to the input field.
+- `color_prompt` - This parameter defines the value for the prompt. The colors are the same as in Row.
   
 #### 2.`const answer = try win.hearing(&buff);`
 Here we call the method on the structure that listens for user input. Once the user enters text, it returns the input. The method accepts a buffer, which should ideally be sized to match the presumed maximum input size to avoid taking up too much memory.
