@@ -9,7 +9,7 @@ pub const TUISettings = struct {
     name: []const u8 = "zTUI",
 };
 
-const InputSettings = struct { prompt: []const u8 };
+const InputSettings = struct { prompt: []const u8, color_promt: Color.ColorName = .none };
 
 const ColorSettings = struct { color: Color.ColorName = .none };
 
@@ -66,7 +66,12 @@ pub const TUI = struct {
     pub fn inputInit(self: *Self, setting: InputSettings) void {
         self.enable_input = true;
 
-        self.prompt = setting.prompt;
+        if (setting.color_promt != .none) {
+            const color_prompt = try Color.colorize_text(setting.prompt, setting.color_promt, self.allocator);
+            self.prompt = color_prompt;
+        } else {
+            self.prompt = setting.prompt;
+        }
     }
 
     pub fn hearing(self: *const Self, buffer: []u8) ![]const u8 {
