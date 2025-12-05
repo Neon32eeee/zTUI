@@ -304,7 +304,7 @@ This is a function that takes no arguments but returns the current size (width) 
 
 ## TODO (0.0.4)
 
-- [ ] Add set color prompt
+- [x] Add set color prompt
 - [ ] Add func setRow and setNumRow
 - [x] Add func 'reprompt'
 
