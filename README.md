@@ -190,7 +190,7 @@ pub fn main() !void {
     var win = try ztui.tui().init(.{.w = 30, .h = 10}, std.heap.page_allocator);
     defer win.deinit();
 
-    win.inputInit(.{.prompt = "Hello"});
+    try win.inputInit(.{.prompt = "Hello"});
 
     win.draw();
 
@@ -207,7 +207,7 @@ pub fn main() !void {
 
 ### Analysis
 
-#### 1.`win.inputInit(.{.prompt = "Hello"});`
+#### 1.`try win.inputInit(.{.prompt = "Hello"});`
 Here we initialize the input system so that we can listen for user input in the future. The method itself accepts input system settings, which include:
 
 - `prompt` - this is the prompt for the user that appears at the end and next to the input field.
@@ -287,6 +287,8 @@ This is a function that takes no arguments but returns the current size (width) 
 - appendNumRow
 - clearRow
 - clearNumRow
+- setRow 
+- setNumRow
 - rename
 - reprompt
 - draw
@@ -305,7 +307,7 @@ This is a function that takes no arguments but returns the current size (width) 
 ## TODO (0.0.4)
 
 - [x] Add set color prompt
-- [ ] Add func setRow and setNumRow
+- [x] Add func setRow and setNumRow
 - [x] Add func 'reprompt'
 
 ## License
