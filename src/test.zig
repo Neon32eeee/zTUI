@@ -15,5 +15,14 @@ pub fn main() !void {
     if (std.mem.eql(u8, answer, "hi")) {
         try win.appendRow("zTUI test text!", .{ .color = .red });
         win.draw();
+
+        win.clearRow();
+        win.rename("Echo");
+        win.reprompt("echo");
+
+        win.draw();
+        const a2 = try win.hearing(&buff);
+        try win.appendRow(a2, .{});
+        win.draw();
     }
 }
