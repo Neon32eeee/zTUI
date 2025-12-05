@@ -108,7 +108,7 @@ pub const TUI = struct {
 
         if (color.color != .none) {
             const color_text = try Color.colorize(numbered, color.color, self.allocator);
-            try self.rows.append(color_text);
+            try self.num_rows.append(color_text);
         } else {
             try self.num_rows.append(numbered);
         }
