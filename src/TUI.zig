@@ -63,7 +63,7 @@ pub const TUI = struct {
         self.num_rows.deinit();
     }
 
-    pub fn inputInit(self: *Self, setting: InputSettings) void {
+    pub fn inputInit(self: *Self, setting: InputSettings) !void {
         self.enable_input = true;
 
         if (setting.color_promt != .none) {
@@ -130,6 +130,38 @@ pub const TUI = struct {
 
     pub fn clearNumRow(self: *Self) void {
         cleanupRows(&self.num_rows, self.allocator);
+    }
+
+    pub fn setRow(self: Self, index: usize, new_row: []const u8, color: ColorSettings) !void {
+        if (index >= self.rows.items.len) return error.InvalidSetIndex;
+
+        const text = try Word.wrapText(self.w - 2, new_row, self.allocator);
+
+        if (color.color != .none) {
+            const color_text = try Color.colorize(text, color.color, self.allocator);
+            self.rows.items[index] = color_text;
+        } else {
+            self.rows.items[index] = text;
+        }
+    }
+
+    pub fn setNumRow(self: Self, index: usize, new_row: []const u8, color: ColorSettings) !void {
+        const wrapped = try Word.wrapText(self.w - 2, new_row, self.allocator);
+        var numbered = std.ArrayList([]const u8).init(self.allocator);
+
+        const idx = self.num_rows.items.len + 1;
+
+        for (wrapped.items) |line| {
+            const prefixed = try std.fmt.allocPrint(self.allocator, "{d}.{s}", .{ idx, line });
+            try numbered.append(prefixed);
+        }
+
+        if (color.color != .none) {
+            const color_text = try Color.colorize(numbered, color.color, self.allocator);
+            self.num_rows.items[index] = color_text;
+        } else {
+            self.num_rows.items[index] = numbered;
+        }
     }
 
     pub fn rename(self: *Self, new_name: []const u8) void {
