@@ -86,8 +86,13 @@ pub const TUI = struct {
         self.name = new_name;
     }
 
-    pub fn reprompt(self: *Self, new_prompt: []const u8) void {
-        self.prompt = new_prompt;
+    pub fn reprompt(self: *Self, new_prompt: []const u8, settings: Settings.ColorSettings) !void {
+        if (settings.color != .none) {
+            const color_prompt = try Color.colorize_text(new_prompt, settings.color, self.allocator);
+            self.prompt = color_prompt;
+        } else {
+            self.prompt = new_prompt;
+        }
     }
 
     fn displayWidth(slice: []const u8) usize {
