@@ -1,15 +1,9 @@
 const std = @import("std");
 const Input = @import("Input.zig");
-const Word = @import("Word.zig");
+const Row = @import("Row.zig");
+const NumRow = @import("NumRow.zig");
 const Color = @import("Color.zig");
-
-pub const TUISettings = struct {
-    w: usize = 90,
-    h: usize = 10,
-    name: []const u8 = "zTUI",
-};
-
-const InputSettings = struct { prompt: []const u8, color_promt: Color.ColorName = .none };
+const Settings = @import("Settings.zig");
 
 pub const TUI = struct {
     w: usize,
@@ -18,50 +12,32 @@ pub const TUI = struct {
     enable_input: bool,
     allocator: std.mem.Allocator,
 
-    rows: std.ArrayList(std.ArrayList([]const u8)),
-    num_rows: std.ArrayList(std.ArrayList([]const u8)),
+    row: Row.Row,
+    num_row: NumRow.NumRow,
 
     prompt: []const u8,
     input_entry: Input.Input = Input.Input.init(),
 
     const Self = @This();
 
-    pub fn init(setting: TUISettings, allocator: std.mem.Allocator) !Self {
+    pub fn init(setting: Settings.TUISettings, allocator: std.mem.Allocator) !Self {
         if (setting.w > (try @import("Termimal.zig").getTerminalSize(std.io.getStdOut())).?.width) return error.InvalidWethg;
         if (setting.w <= 0) return error.InvalidWethg;
 
-        const rows = std.ArrayList(std.ArrayList([]const u8)).init(allocator);
-        const num_rows = std.ArrayList(std.ArrayList([]const u8)).init(allocator);
+        const rows = Row.Row.init(allocator);
+        const num_rows = NumRow.NumRow.init(allocator);
 
-        const self = Self{ .w = setting.w, .h = setting.h, .name = setting.name, .enable_input = false, .rows = rows, .num_rows = num_rows, .prompt = "", .allocator = allocator };
+        const self = Self{ .w = setting.w, .h = setting.h, .name = setting.name, .enable_input = false, .row = rows, .num_row = num_rows, .prompt = "", .allocator = allocator };
 
         return self;
     }
 
     pub fn deinit(self: *Self) void {
-        const allocator = self.allocator;
-
-        for (self.rows.items) |row_list| {
-            for (row_list.items) |line| {
-                allocator.free(line);
-            }
-
-            row_list.deinit();
-        }
-
-        self.rows.deinit();
-
-        for (self.num_rows.items) |num_row_list| {
-            for (num_row_list.items) |line| {
-                allocator.free(line);
-            }
-            num_row_list.deinit();
-        }
-
-        self.num_rows.deinit();
+        self.row.deinit();
+        self.num_row.deinit();
     }
 
-    pub fn inputInit(self: *Self, setting: InputSettings) !void {
+    pub fn inputInit(self: *Self, setting: Settings.InputSettings) !void {
         self.enable_input = true;
 
         if (setting.color_promt != .none) {
@@ -82,84 +58,28 @@ pub const TUI = struct {
         return result;
     }
 
-    pub fn appendRow(self: *Self, row: []const u8, settings: struct { color: Color.ColorName = .none }) !void {
-        const text = try Word.wrapText(self.w - 2, row, self.allocator);
-
-        if (settings.color != .none) {
-            const color_text = try Color.colorize(text, settings.color, self.allocator);
-            try self.rows.append(color_text);
-        } else {
-            try self.rows.append(text);
-        }
+    pub fn appendRow(self: *Self, row: []const u8, settings: Settings.RowSettings) !void {
+        try self.row.append(self.w, row, settings);
     }
 
-    pub fn appendNumRow(self: *Self, row: []const u8, settings: struct { color: Color.ColorName = .none }) !void {
-        const wrapped = try Word.wrapText(self.w - 2, row, self.allocator);
-        var numbered = std.ArrayList([]const u8).init(self.allocator);
-
-        const idx = self.num_rows.items.len + 1;
-
-        for (wrapped.items) |line| {
-            const prefixed = try std.fmt.allocPrint(self.allocator, "{d}.{s}", .{ idx, line });
-            try numbered.append(prefixed);
-        }
-
-        if (settings.color != .none) {
-            const color_text = try Color.colorize(numbered, settings.color, self.allocator);
-            try self.num_rows.append(color_text);
-        } else {
-            try self.num_rows.append(numbered);
-        }
-    }
-
-    fn cleanupRows(rows_list: *std.ArrayList(std.ArrayList([]const u8)), allocator: std.mem.Allocator) void {
-        for (rows_list.items) |row_list| {
-            for (row_list.items) |line| {
-                allocator.free(line);
-            }
-            row_list.deinit();
-        }
-        rows_list.clearAndFree();
+    pub fn appendNumRow(self: *Self, row: []const u8, settings: Settings.RowSettings) !void {
+        try self.num_row.append(self.w, row, settings);
     }
 
     pub fn clearRow(self: *Self) void {
-        cleanupRows(&self.rows, self.allocator);
+        self.row.clear();
     }
 
     pub fn clearNumRow(self: *Self) void {
-        cleanupRows(&self.num_rows, self.allocator);
+        self.num_row.clear();
     }
 
-    pub fn setRow(self: Self, index: usize, new_row: []const u8, settings: struct { color: Color.ColorName = .none }) !void {
-        if (index >= self.rows.items.len) return error.InvalidSetIndex;
-
-        const text = try Word.wrapText(self.w - 2, new_row, self.allocator);
-
-        if (settings.color != .none) {
-            const color_text = try Color.colorize(text, settings.color, self.allocator);
-            self.rows.items[index] = color_text;
-        } else {
-            self.rows.items[index] = text;
-        }
+    pub fn setRow(self: Self, index: usize, new_row: []const u8, settings: Settings.RowSettings) !void {
+        try self.row.setRow(self.w, index, new_row, settings);
     }
 
     pub fn setNumRow(self: Self, index: usize, new_row: []const u8, settings: struct { color: Color.ColorName = .none }) !void {
-        const wrapped = try Word.wrapText(self.w - 2, new_row, self.allocator);
-        var numbered = std.ArrayList([]const u8).init(self.allocator);
-
-        const idx = self.num_rows.items.len + 1;
-
-        for (wrapped.items) |line| {
-            const prefixed = try std.fmt.allocPrint(self.allocator, "{d}.{s}", .{ idx, line });
-            try numbered.append(prefixed);
-        }
-
-        if (settings.color != .none) {
-            const color_text = try Color.colorize(numbered, settings.color, self.allocator);
-            self.num_rows.items[index] = color_text;
-        } else {
-            self.num_rows.items[index] = numbered;
-        }
+        try self.num_row.setNumRow(self.w, index, new_row, settings);
     }
 
     pub fn rename(self: *Self, new_name: []const u8) void {
@@ -211,7 +131,7 @@ pub const TUI = struct {
 
         var printed_lines: usize = 0;
 
-        for (self.rows.items) |row| {
+        for (self.row.rows.items) |row| {
             if (printed_lines >= self.h - 2) break;
             for (row.items) |line| {
                 if (printed_lines >= self.h - 2) break;
@@ -223,7 +143,7 @@ pub const TUI = struct {
             }
         }
 
-        for (self.num_rows.items) |row| {
+        for (self.num_row.rows.items) |row| {
             if (printed_lines >= self.h - 2) break;
             for (row.items) |line| {
                 if (printed_lines >= self.h - 2) break;
