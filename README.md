@@ -304,11 +304,11 @@ This is a function that takes no arguments but returns the current size (width) 
 - prompt
 - input_entry
 
-## TODO (0.0.4)
+## TODO (0.0.5)
 
-- [x] Add set color prompt
-- [x] Add func setRow and setNumRow
-- [x] Add func 'reprompt'
+- [ ] Add func getTerminalHeight
+- [ ] Refactor arg func 'appendRow' & 'appendNumRow' with 'color' -> 'settings'
+- [ ] Add modul Row and NumRow
 
 ## License
 
