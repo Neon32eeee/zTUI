@@ -9,4 +9,6 @@ pub const TUISettings = struct {
 
 pub const InputSettings = struct { prompt: []const u8, color_promt: Color.ColorName = .none };
 
+pub const ColorSettings = struct { color: Color.ColorName = .none };
+
 pub const RowSettings = struct { color: Color.ColorName = .none };
