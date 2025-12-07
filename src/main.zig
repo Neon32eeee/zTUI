@@ -3,7 +3,7 @@ const TUI = @import("TUI.zig");
 const Terminal = @import("Termimal.zig");
 
 pub fn tui() type {
-   return TUI.TUI;
+    return TUI.TUI;
 }
 
 pub fn getTerminalWidth() !usize {
@@ -12,3 +12,8 @@ pub fn getTerminalWidth() !usize {
     return (try Terminal.getTerminalSize(stdout)).?.width;
 }
 
+pub fn getTerminalHeigth() !usize {
+    const stdout = std.io.getStdOut();
+
+    return (try Terminal.getTerminalSize(stdout)).?.height - 2;
+}
