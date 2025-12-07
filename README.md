@@ -115,12 +115,13 @@ pub fn main() !void {
 ### Analysis
 
 #### `try win.appendRow("zTUI test text!", .{});`
-The `appendRow` method accepts 2 argument, which is the string we want to add. First, it breaks the text and wraps words if necessary, but if a word is longer than the width itself, an error will be issued. It simply adds this edited string to `win.rows`, which stores these strings, and the `win.draw();` method renders them in order from the 0th element to the last.  The second argument is responsible for the color, here is a list of all colors:
+The `appendRow` method accepts 2 argument, which is the string we want to add. First, it breaks the text and wraps words if necessary, but if a word is longer than the width itself, an error will be issued. It simply adds this edited string to `win.rows`, which stores these strings, and the `win.draw();` method renders them in order from the 0th element to the last.  The second argument is responsible for the settings:
 
-- `red`
-- `green`
-- `yellow`
-- `blue`
+- color:
+  - `red`
+  - `green`
+  - `yellow`
+  - `blue`
 
 
 ### Expected Output
@@ -307,7 +308,8 @@ This is a function that takes no arguments but returns the current size (width) 
 ## TODO (0.0.5)
 
 - [x] Add func getTerminalHeight
-- [ ] Refactor arg func 'appendRow' & 'appendNumRow' with 'color' -> 'settings'
+- [x] Refactor arg func 'appendRow' & 'appendNumRow' with 'color' -> 'settings'
+- [ ] Add modul Settings
 - [ ] Add modul Row and NumRow
 
 ## License
