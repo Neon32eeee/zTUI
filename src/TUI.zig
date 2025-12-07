@@ -11,8 +11,6 @@ pub const TUISettings = struct {
 
 const InputSettings = struct { prompt: []const u8, color_promt: Color.ColorName = .none };
 
-const ColorSettings = struct { color: Color.ColorName = .none };
-
 pub const TUI = struct {
     w: usize,
     h: usize,
@@ -84,18 +82,18 @@ pub const TUI = struct {
         return result;
     }
 
-    pub fn appendRow(self: *Self, row: []const u8, color: ColorSettings) !void {
+    pub fn appendRow(self: *Self, row: []const u8, settings: struct { color: Color.ColorName = .none }) !void {
         const text = try Word.wrapText(self.w - 2, row, self.allocator);
 
-        if (color.color != .none) {
-            const color_text = try Color.colorize(text, color.color, self.allocator);
+        if (settings.color != .none) {
+            const color_text = try Color.colorize(text, settings.color, self.allocator);
             try self.rows.append(color_text);
         } else {
             try self.rows.append(text);
         }
     }
 
-    pub fn appendNumRow(self: *Self, row: []const u8, color: ColorSettings) !void {
+    pub fn appendNumRow(self: *Self, row: []const u8, settings: struct { color: Color.ColorName = .none }) !void {
         const wrapped = try Word.wrapText(self.w - 2, row, self.allocator);
         var numbered = std.ArrayList([]const u8).init(self.allocator);
 
@@ -106,8 +104,8 @@ pub const TUI = struct {
             try numbered.append(prefixed);
         }
 
-        if (color.color != .none) {
-            const color_text = try Color.colorize(numbered, color.color, self.allocator);
+        if (settings.color != .none) {
+            const color_text = try Color.colorize(numbered, settings.color, self.allocator);
             try self.num_rows.append(color_text);
         } else {
             try self.num_rows.append(numbered);
@@ -132,20 +130,20 @@ pub const TUI = struct {
         cleanupRows(&self.num_rows, self.allocator);
     }
 
-    pub fn setRow(self: Self, index: usize, new_row: []const u8, color: ColorSettings) !void {
+    pub fn setRow(self: Self, index: usize, new_row: []const u8, settings: struct { color: Color.ColorName = .none }) !void {
         if (index >= self.rows.items.len) return error.InvalidSetIndex;
 
         const text = try Word.wrapText(self.w - 2, new_row, self.allocator);
 
-        if (color.color != .none) {
-            const color_text = try Color.colorize(text, color.color, self.allocator);
+        if (settings.color != .none) {
+            const color_text = try Color.colorize(text, settings.color, self.allocator);
             self.rows.items[index] = color_text;
         } else {
             self.rows.items[index] = text;
         }
     }
 
-    pub fn setNumRow(self: Self, index: usize, new_row: []const u8, color: ColorSettings) !void {
+    pub fn setNumRow(self: Self, index: usize, new_row: []const u8, settings: struct { color: Color.ColorName = .none }) !void {
         const wrapped = try Word.wrapText(self.w - 2, new_row, self.allocator);
         var numbered = std.ArrayList([]const u8).init(self.allocator);
 
@@ -156,8 +154,8 @@ pub const TUI = struct {
             try numbered.append(prefixed);
         }
 
-        if (color.color != .none) {
-            const color_text = try Color.colorize(numbered, color.color, self.allocator);
+        if (settings.color != .none) {
+            const color_text = try Color.colorize(numbered, settings.color, self.allocator);
             self.num_rows.items[index] = color_text;
         } else {
             self.num_rows.items[index] = numbered;
