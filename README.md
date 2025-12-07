@@ -253,13 +253,13 @@ Hello|
 
 ---
 
-Using the `w` value for the current terminal size
+Using the value for the current terminal size
 
 ```zig
 const ztui = @import("ztui")
 
 pub fn main() !void {
-    const win = ztui.tui().init(.{.w = try ztui.getTerminalWidth()});
+    const win = ztui.tui().init(.{.w = try ztui.getTerminalWidth(), .h = try ztui.getTerminalHeigth()});
 
     win.draw();
 }
@@ -306,7 +306,7 @@ This is a function that takes no arguments but returns the current size (width) 
 
 ## TODO (0.0.5)
 
-- [ ] Add func getTerminalHeight
+- [x] Add func getTerminalHeight
 - [ ] Refactor arg func 'appendRow' & 'appendNumRow' with 'color' -> 'settings'
 - [ ] Add modul Row and NumRow
 
