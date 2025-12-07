@@ -309,8 +309,8 @@ This is a function that takes no arguments but returns the current size (width) 
 
 - [x] Add func getTerminalHeight
 - [x] Refactor arg func 'appendRow' & 'appendNumRow' with 'color' -> 'settings'
-- [ ] Add modul Settings
-- [ ] Add modul Row and NumRow
+- [x] Add modul Settings
+- [x] Add modul Row and NumRow
 
 ## License
 
