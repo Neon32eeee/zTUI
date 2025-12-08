@@ -42,11 +42,13 @@ pub const NumRow = struct {
             try numbered.append(prefixed);
         }
 
+        const inc_text = try Word.applyIndentation(self.allocator, numbered, settings.indentation);
+
         if (settings.color != .none) {
-            const color_text = try Color.colorize(numbered, settings.color, self.allocator);
+            const color_text = try Color.colorize(inc_text, settings.color, self.allocator);
             try self.rows.append(color_text);
         } else {
-            try self.rows.append(numbered);
+            try self.rows.append(inc_text);
         }
     }
 
@@ -71,11 +73,13 @@ pub const NumRow = struct {
             try numbered.append(prefixed);
         }
 
+        const inc_text = try Word.applyIndentation(self.allocator, numbered, settings.indentation);
+
         if (settings.color != .none) {
-            const color_text = try Color.colorize(numbered, settings.color, self.allocator);
+            const color_text = try Color.colorize(inc_text, settings.color, self.allocator);
             self.rows.items[index] = color_text;
         } else {
-            self.rows.items[index] = numbered;
+            self.rows.items[index] = inc_text;
         }
     }
 };
