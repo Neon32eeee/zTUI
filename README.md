@@ -122,6 +122,8 @@ The `appendRow` method accepts 2 argument, which is the string we want to add. F
   - `green`
   - `yellow`
   - `blue`
+- indentation:
+  -  defines the number of sharps for a row
 
 
 ### Expected Output
@@ -311,7 +313,7 @@ This is a function that takes no arguments but returns the current size (width) 
 - [x] Refactor arg func 'appendRow' & 'appendNumRow' with 'color' -> 'settings'
 - [x] Add modul Settings
 - [x] Add modul Row and NumRow
-- [ ] Add set indentation in Row and other
+- [x] Add set indentation in Row and other
 
 ## License
 
