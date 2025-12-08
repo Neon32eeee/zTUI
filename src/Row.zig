@@ -34,11 +34,13 @@ pub const Row = struct {
     pub fn append(self: *Self, w: usize, row: []const u8, settings: Settings.RowSettings) !void {
         const text = try Word.wrapText(w - 2, row, self.allocator);
 
+        const inc_text = try Word.applyIndentation(self.allocator, text, settings.indentation);
+
         if (settings.color != .none) {
-            const color_text = try Color.colorize(text, settings.color, self.allocator);
+            const color_text = try Color.colorize(inc_text, settings.color, self.allocator);
             try self.rows.append(color_text);
         } else {
-            try self.rows.append(text);
+            try self.rows.append(inc_text);
         }
     }
 
@@ -57,11 +59,13 @@ pub const Row = struct {
 
         const text = try Word.wrapText(w - 2, new_row, self.allocator);
 
+        const inc_text = try Word.applyIndentation(self.allocator, text, settings.indentation);
+
         if (settings.color != .none) {
-            const color_text = try Color.colorize(text, settings.color, self.allocator);
+            const color_text = try Color.colorize(inc_text, settings.color, self.allocator);
             self.rows.items[index] = color_text;
         } else {
-            self.rows.items[index] = text;
+            self.rows.items[index] = inc_text;
         }
     }
 };
