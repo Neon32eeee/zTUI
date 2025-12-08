@@ -311,6 +311,7 @@ This is a function that takes no arguments but returns the current size (width) 
 - [x] Refactor arg func 'appendRow' & 'appendNumRow' with 'color' -> 'settings'
 - [x] Add modul Settings
 - [x] Add modul Row and NumRow
+- [ ] Add set indentation in Row and other
 
 ## License
 
