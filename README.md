@@ -307,13 +307,10 @@ This is a function that takes no arguments but returns the current size (width) 
 - prompt
 - input_entry
 
-## TODO (0.0.5)
+## TODO (0.0.6)
 
-- [x] Add func getTerminalHeight
-- [x] Refactor arg func 'appendRow' & 'appendNumRow' with 'color' -> 'settings'
-- [x] Add modul Settings
-- [x] Add modul Row and NumRow
-- [x] Add set indentation in Row and other
+- [ ] Add modul ProgressBar
+- [ ] Add func appdendProgressBar and other
 
 ## License
 
