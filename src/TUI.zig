@@ -99,7 +99,7 @@ pub const TUI = struct {
     }
 
     pub fn setProgressBar(self: *Self, prochent: usize, index: usize) void {
-        self.progress_bar.set(self.w - 2, prochent, index);
+        try self.progress_bar.set(self.w - 2, prochent, index);
     }
 
     pub fn rename(self: *Self, new_name: []const u8) void {
