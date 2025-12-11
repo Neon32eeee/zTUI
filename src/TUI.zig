@@ -2,6 +2,7 @@ const std = @import("std");
 const Input = @import("Input.zig");
 const Row = @import("Row.zig");
 const NumRow = @import("NumRow.zig");
+const ProgressBar = @import("RrogressBar.zig");
 const Color = @import("Color.zig");
 const Settings = @import("Settings.zig");
 
@@ -14,6 +15,7 @@ pub const TUI = struct {
 
     row: Row.Row,
     num_row: NumRow.NumRow,
+    progress_bar: ProgressBar.ProgressBar,
 
     prompt: []const u8,
     input_entry: Input.Input = Input.Input.init(),
@@ -26,15 +28,17 @@ pub const TUI = struct {
 
         const rows = Row.Row.init(allocator);
         const num_rows = NumRow.NumRow.init(allocator);
+        const progress_bar = ProgressBar.ProgressBar.init(allocator);
 
-        const self = Self{ .w = setting.w, .h = setting.h, .name = setting.name, .enable_input = false, .row = rows, .num_row = num_rows, .prompt = "", .allocator = allocator };
+        const self = Self{ .w = setting.w, .h = setting.h, .name = setting.name, .enable_input = false, .row = rows, .num_row = num_rows, .progress_bar = progress_bar, .prompt = "", .allocator = allocator };
 
         return self;
     }
 
     pub fn deinit(self: *Self) void {
-        self.row.deinit();
+        progress_barself.row.deinit();
         self.num_row.deinit();
+        self.progress_bar.deinit();
     }
 
     pub fn inputInit(self: *Self, setting: Settings.InputSettings) !void {
@@ -80,6 +84,22 @@ pub const TUI = struct {
 
     pub fn setNumRow(self: Self, index: usize, new_row: []const u8, settings: struct { color: Color.ColorName = .none }) !void {
         try self.num_row.setNumRow(self.w, index, new_row, settings);
+    }
+
+    pub fn appendProgressBar(self: *Self, prochent: usize) !void {
+        try self.progress_bar.append(self.w - 2, prochent);
+    }
+
+    pub fn clearProgressBar(self: *Self, settings: Settings.ProgressBarClearSettings) !void {
+        if (settings.index > 0) {
+            self.progress_bar.clearIndex(settings.index);
+        } else {
+            self.progress_bar.clearAll();
+        }
+    }
+
+    pub fn setProgressBar(self: *Self, prochent: usize, index: usize) void {
+        self.progress_bar.set(self.w - 2, prochent, index);
     }
 
     pub fn rename(self: *Self, new_name: []const u8) void {
