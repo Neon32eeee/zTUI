@@ -36,7 +36,7 @@ pub const TUI = struct {
     }
 
     pub fn deinit(self: *Self) void {
-        progress_barself.row.deinit();
+        self.row.deinit();
         self.num_row.deinit();
         self.progress_bar.deinit();
     }
@@ -178,6 +178,15 @@ pub const TUI = struct {
                 std.debug.print("│\n", .{});
                 printed_lines += 1;
             }
+        }
+
+        for (self.progress_bar.progress_bars.items) |progress_bar| {
+            if (printed_lines >= self.h - 2) break;
+            std.debug.print("│", .{});
+            const progress_bar_len = displayWidth(progress_bar);
+            for (0..self.w - 2 - progress_bar_len) |_| std.debug.print(" ", .{});
+            std.debug.print("{s}│\n", .{progress_bar});
+            printed_lines += 1;
         }
 
         while (printed_lines < self.h - 2) : (printed_lines += 1) {
