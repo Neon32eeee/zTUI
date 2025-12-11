@@ -90,7 +90,7 @@ pub const TUI = struct {
         try self.progress_bar.append(self.w - 2, prochent);
     }
 
-    pub fn clearProgressBar(self: *Self, settings: Settings.ProgressBarClearSettings) !void {
+    pub fn clearProgressBar(self: *Self, settings: Settings.ProgressBarClearSettings) void {
         if (settings.index > 0) {
             self.progress_bar.clearIndex(settings.index);
         } else {
@@ -98,7 +98,7 @@ pub const TUI = struct {
         }
     }
 
-    pub fn setProgressBar(self: *Self, prochent: usize, index: usize) void {
+    pub fn setProgressBar(self: *Self, prochent: usize, index: usize) !void {
         try self.progress_bar.set(self.w - 2, prochent, index);
     }
 
