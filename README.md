@@ -180,7 +180,71 @@ It’s important to note that `num_rows` has lower priority than `rows` when ren
 │                  │
 ╰──────────────────╯
 ```
+--- 
 
+Using a progress bar
+
+```
+const std = @import("std");
+const ztui = @import("ztui");
+
+pub fn main() !void {
+    var win = try ztui.tui().init(.{.w = 20, .h = 10}, std.heap.page_allocator);
+    defer win.deinit();
+    
+    try win.appendProgressBar(0);
+    
+    for (0..100) |i| {
+        try win.setProgressBar(i, 0);
+        std.time.sleep(std.time.ns_per_s);
+        win.draw();
+    }
+}
+```
+
+### Analysis
+
+1. `try win.appendProgressBar(0);`
+
+Creates a progress bar at 0%, the value cannot exceed 100.
+
+2. `try win.setProgressBar(i, 0);`
+
+Sets a new percentage at the specified index.
+
+### Expected Output
+
+####  On first program launch
+```
+╭──────────────────╮
+│zTUI              │
+│      ----------0%│
+│                  │
+│                  │
+│                  │
+│                  │
+│                  │
+│                  │
+│                  │
+╰──────────────────╯
+```
+#### after 99 seconds
+```
+╭──────────────────╮
+│zTUI              │
+│     #########-99%│
+│                  │
+│                  │
+│                  │
+│                  │
+│                  │
+│                  │
+│                  │
+╰──────────────────╯
+
+```
+
+####
 ---
 
 Example with the user input system
@@ -292,6 +356,9 @@ This is a function that takes no arguments but returns the current size (width) 
 - clearNumRow
 - setRow 
 - setNumRow
+- appendProgressBar
+- clearProgressBar
+- setProgressBar
 - rename
 - reprompt
 - draw
@@ -302,15 +369,16 @@ This is a function that takes no arguments but returns the current size (width) 
 - name
 - enable_input
 - allocator
-- rows
-- num_rows
+- row
+- num_row
+- progress_bar
 - prompt
 - input_entry
 
 ## TODO (0.0.6)
 
-- [ ] Add modul ProgressBar
-- [ ] Add func appdendProgressBar and other
+- [x] Add modul ProgressBar
+- [x] Add func appdendProgressBar and other
 
 ## License
 
