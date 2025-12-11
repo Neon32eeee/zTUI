@@ -2,7 +2,7 @@ const std = @import("std");
 const Input = @import("Input.zig");
 const Row = @import("Row.zig");
 const NumRow = @import("NumRow.zig");
-const ProgressBar = @import("RrogressBar.zig");
+const ProgressBar = @import("ProgressBar.zig");
 const Color = @import("Color.zig");
 const Settings = @import("Settings.zig");
 
