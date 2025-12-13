@@ -379,19 +379,10 @@ This is a function that takes no arguments but returns the current size (width) 
 
 - [x] Add modul ProgressBar
 - [x] Add func appdendProgressBar and other
-- [ ] Changing license from GNU-v3 on MIT
+- [x] Changing license from GNU-v3 on MIT
 
 ## License
 
-This project, **zTUI**, is licensed under the **GNU General Public License v3.0 (GPLv3)**.
+MIT License
 
-The GPLv3 guarantees that you are free to:
-
-* **Use** the program for any purpose.
-* **Study** how the program works, and change it.
-* **Share** copies of the program.
-* **Improve** the program and release your improvements to the public.
-
-**Important condition (Copyleft):** Any code that uses or is based on **zTUI** and is distributed to others must also be released under this same license (GPLv3) or a compatible one, and its source code must be provided.
-
-The full text of the license is contained in the **`LICENSE`** file in the root of this repository.
+Versions prior to 0.0.5 were licensed under GPL-3.0.
