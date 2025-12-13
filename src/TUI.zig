@@ -18,7 +18,7 @@ pub const TUI = struct {
     progress_bar: ProgressBar.ProgressBar,
 
     prompt: []const u8,
-    input_entry: Input.Input = Input.Input.init(),
+    input_entry: Input.Input,
 
     const Self = @This();
 
@@ -29,8 +29,9 @@ pub const TUI = struct {
         const rows = Row.Row.init(allocator);
         const num_rows = NumRow.NumRow.init(allocator);
         const progress_bar = ProgressBar.ProgressBar.init(allocator);
+        const input_entry: Input.Input = Input.Input.init();
 
-        const self = Self{ .w = setting.w, .h = setting.h, .name = setting.name, .enable_input = false, .row = rows, .num_row = num_rows, .progress_bar = progress_bar, .prompt = "", .allocator = allocator };
+        const self = Self{ .w = setting.w, .h = setting.h, .name = setting.name, .enable_input = false, .row = rows, .num_row = num_rows, .progress_bar = progress_bar, .input_entry = input_entry, .prompt = "", .allocator = allocator };
 
         return self;
     }
