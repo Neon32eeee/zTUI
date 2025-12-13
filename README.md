@@ -379,6 +379,7 @@ This is a function that takes no arguments but returns the current size (width) 
 
 - [x] Add modul ProgressBar
 - [x] Add func appdendProgressBar and other
+- [ ] Changing license from GNU-v3 on MIT
 
 ## License
 
