@@ -82,7 +82,7 @@ pub const ProgressBar = struct {
     }
 
     pub fn clearIndex(self: *Self, i: usize) void {
-        try self.progress_bars.orderedRemove(i);
+        _ = self.progress_bars.orderedRemove(i);
     }
 
     pub fn set(self: *Self, w: usize, prochent: usize, index: usize) !void {

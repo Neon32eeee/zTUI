@@ -92,8 +92,8 @@ pub const TUI = struct {
     }
 
     pub fn clearProgressBar(self: *Self, settings: Settings.ProgressBarClearSettings) void {
-        if (settings.index >= 0) {
-            self.progress_bar.clearIndex(settings.index);
+        if (settings.index) |i| {
+            self.progress_bar.clearIndex(i);
         } else {
             self.progress_bar.clearAll();
         }
