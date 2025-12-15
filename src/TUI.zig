@@ -71,12 +71,20 @@ pub const TUI = struct {
         try self.num_row.append(self.w, row, settings);
     }
 
-    pub fn clearRow(self: *Self) void {
-        self.row.clearAll();
+    pub fn clearRow(self: *Self, settings: Settings.ClearSettings) void {
+    		if (settings.index) |i| {
+        		self.row.clearIndex(i);
+    		} else {
+    			self.row.clearAll();
+    		}
     }
 
-    pub fn clearNumRow(self: *Self) void {
-        self.num_row.clearAll();
+    pub fn clearNumRow(self: *Self, settings: Settings.ClearSettings) void {
+        if (settings.index) |i| {
+        		self.num_row.clearIndex(i);
+    		} else {
+    			self.num_row.clearAll();
+    		}
     }
 
     pub fn setRow(self: Self, index: usize, new_row: []const u8, settings: Settings.RowSettings) !void {
