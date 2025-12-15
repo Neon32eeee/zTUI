@@ -375,11 +375,9 @@ This is a function that takes no arguments but returns the current size (width) 
 - prompt
 - input_entry
 
-## TODO (0.0.6)
+## TODO (0.0.7)
 
-- [x] Add modul ProgressBar
-- [x] Add func appdendProgressBar and other
-- [x] Changing license from GNU-v3 on MIT
+- [ ] Rename 'ProgressBarClearSettings' - > 'ClearSettings' in 'Settings' modul
 
 ## License
 
