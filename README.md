@@ -17,7 +17,7 @@ zTUI is an open-source library for TUI, with support for user input systems.
 ## How to Install
 Installation via fetch
 ```
-zig fetch --save https://github.com/Neon32eeee/zTUI/archive/refs/tags/0.0.5.tar.gz
+zig fetch --save https://github.com/Neon32eeee/zTUI/archive/refs/tags/0.0.6.tar.gz
 ```
 
 add for build.zig
