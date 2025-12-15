@@ -378,6 +378,7 @@ This is a function that takes no arguments but returns the current size (width) 
 ## TODO (0.0.7)
 
 - [ ] Rename 'ProgressBarClearSettings' - > 'ClearSettings' in 'Settings' modul
+- [ ] Add helping arg 'settings' for func 'clearRow' & 'clearNumRow' 
 
 ## License
 
