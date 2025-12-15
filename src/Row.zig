@@ -54,6 +54,14 @@ pub const Row = struct {
         self.rows.clearAndFree();
     }
 
+    pub fn clearIndex(self: *Self, i: usize) void {
+    		for (self.rows.items[i].items) |line| {
+    			self.allocator.free(line);
+    		}
+    		self.rows.items[i].deinit();
+    		_ = self.rows.orderedRemove(i);
+    	}
+
     pub fn setRow(self: Self, w: usize, index: usize, new_row: []const u8, settings: Settings.RowSettings) !void {
         if (index >= self.rows.items.len) return error.InvalidSetIndex;
 

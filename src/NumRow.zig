@@ -62,6 +62,14 @@ pub const NumRow = struct {
         self.rows.clearAndFree();
     }
 
+    pub fn clearIndex(self: *Self, i: usize) void {
+    		for (self.rows.items[i].items) |line| {
+    			self.allocator.free(line);
+    		}
+    		self.rows.items[i].deinit();
+    		_ = self.rows.orderedRemove(i);
+    	}
+
     pub fn setNumRow(self: Self, w: usize, index: usize, new_row: []const u8, settings: Settings.RowSettings) !void {
         const wrapped = try Word.wrapText(w - 2, new_row, self.allocator);
         var numbered = std.ArrayList([]const u8).init(self.allocator);
