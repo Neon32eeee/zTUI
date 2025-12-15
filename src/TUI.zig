@@ -72,11 +72,11 @@ pub const TUI = struct {
     }
 
     pub fn clearRow(self: *Self) void {
-        self.row.clear();
+        self.row.clearAll();
     }
 
     pub fn clearNumRow(self: *Self) void {
-        self.num_row.clear();
+        self.num_row.clearAll();
     }
 
     pub fn setRow(self: Self, index: usize, new_row: []const u8, settings: Settings.RowSettings) !void {

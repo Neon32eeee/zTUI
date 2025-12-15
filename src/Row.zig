@@ -44,7 +44,7 @@ pub const Row = struct {
         }
     }
 
-    pub fn clear(self: *Self) void {
+    pub fn clearAll(self: *Self) void {
         for (self.rows.items) |row_list| {
             for (row_list.items) |line| {
                 self.allocator.free(line);
