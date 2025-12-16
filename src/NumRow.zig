@@ -31,25 +31,31 @@ pub const NumRow = struct {
         self.rows.deinit();
     }
 
-    pub fn append(self: *Self, w: usize, row: []const u8, settings: Settings.RowSettings) !void {
-        const wrapped = try Word.wrapText(w - 2, row, self.allocator);
-        var numbered = std.ArrayList([]const u8).init(self.allocator);
+    fn wordProcessing(allocator: std.mem.Allocator, text: []const u8, settings: Settings.RowSettings, w: usize, i: usize) !std.ArrayList([]const u8) {
+    		const wrapped = try Word.wrapText(w - 2, text, allocator);
+        var numbered = std.ArrayList([]const u8).init(allocator);
 
-        const idx = self.rows.items.len + 1;
+        const idx = i;
 
         for (wrapped.items) |line| {
-            const prefixed = try std.fmt.allocPrint(self.allocator, "{d}.{s}", .{ idx, line });
+            const prefixed = try std.fmt.allocPrint(allocator, "{d}.{s}", .{ idx, line });
             try numbered.append(prefixed);
         }
 
-        const inc_text = try Word.applyIndentation(self.allocator, numbered, settings.indentation);
+        const inc_text = try Word.applyIndentation(allocator, numbered, settings.indentation);
 
         if (settings.color != .none) {
-            const color_text = try Color.colorize(inc_text, settings.color, self.allocator);
-            try self.rows.append(color_text);
+            const color_text = try Color.colorize(inc_text, settings.color, allocator);
+            return color_text;
         } else {
-            try self.rows.append(inc_text);
+			return inc_text;
         }
+    }
+
+    pub fn append(self: *Self, w: usize, row: []const u8, settings: Settings.RowSettings) !void {
+		const text = try wordProcessing(self.allocator, row, settings, w, self.rows.items.len + 1);
+
+		try self.rows.append(text);
     }
 
     pub fn clearAll(self: *Self) void {
@@ -71,23 +77,10 @@ pub const NumRow = struct {
     	}
 
     pub fn setNumRow(self: Self, w: usize, index: usize, new_row: []const u8, settings: Settings.RowSettings) !void {
-        const wrapped = try Word.wrapText(w - 2, new_row, self.allocator);
-        var numbered = std.ArrayList([]const u8).init(self.allocator);
+		if (index >= self.rows.items.len) return error.InvalidSetIndex;
 
-        const idx = self.num_rows.items.len + 1;
+		const text = try wordProcessing(self.allocator, new_row, settings, w, index + 1);
 
-        for (wrapped.items) |line| {
-            const prefixed = try std.fmt.allocPrint(self.allocator, "{d}.{s}", .{ idx, line });
-            try numbered.append(prefixed);
-        }
-
-        const inc_text = try Word.applyIndentation(self.allocator, numbered, settings.indentation);
-
-        if (settings.color != .none) {
-            const color_text = try Color.colorize(inc_text, settings.color, self.allocator);
-            self.rows.items[index] = color_text;
-        } else {
-            self.rows.items[index] = inc_text;
-        }
-    }
+    		self.rows.items[index] = text;
+    	}
 };
