@@ -76,7 +76,7 @@ pub const NumRow = struct {
     		_ = self.rows.orderedRemove(i);
     	}
 
-    pub fn setNumRow(self: Self, w: usize, index: usize, new_row: []const u8, settings: Settings.RowSettings) !void {
+    pub fn setNumRow(self: *Self, w: usize, index: usize, new_row: []const u8, settings: Settings.RowSettings) !void {
 		if (index >= self.rows.items.len) return error.InvalidSetIndex;
 
 		const text = try wordProcessing(self.allocator, new_row, settings, w, index + 1);

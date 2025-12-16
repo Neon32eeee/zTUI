@@ -32,7 +32,7 @@ pub const Row = struct {
     }
 
     fn wordProcessing(allocator: std.mem.Allocator, text: []const u8, settings: Settings.RowSettings, w: usize) !std.ArrayList([]const u8) {
-    	const t = try Word.wrapText(w - 2, text, allocator);
+    		const t = try Word.wrapText(w - 2, text, allocator);
 
         const inc_text = try Word.applyIndentation(allocator, t, settings.indentation);
 
@@ -69,7 +69,7 @@ pub const Row = struct {
     		_ = self.rows.orderedRemove(i);
     	}
 
-    pub fn setRow(self: Self, w: usize, index: usize, new_row: []const u8, settings: Settings.RowSettings) !void {
+    pub fn setRow(self: *Self, w: usize, index: usize, new_row: []const u8, settings: Settings.RowSettings) !void {
         if (index >= self.rows.items.len) return error.InvalidSetIndex;
 
         const text = try wordProcessing(self.allocator, new_row, settings, w);
