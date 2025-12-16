@@ -79,8 +79,14 @@ pub const NumRow = struct {
     pub fn setNumRow(self: *Self, w: usize, index: usize, new_row: []const u8, settings: Settings.RowSettings) !void {
 		if (index >= self.rows.items.len) return error.InvalidSetIndex;
 
+		var old = self.rows.items[index];
+        for (old.items) |line| {
+        	self.allocator.free(line);
+        }
+        old.deinit();
+
 		const text = try wordProcessing(self.allocator, new_row, settings, w, index + 1);
 
-    		self.rows.items[index] = text;
-    	}
+    	self.rows.items[index] = text;
+    }
 };
