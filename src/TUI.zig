@@ -24,7 +24,7 @@ pub const TUI = struct {
 
     pub fn init(setting: Settings.TUISettings, allocator: std.mem.Allocator) !Self {
         if (setting.w > (try @import("Termimal.zig").getTerminalSize(std.io.getStdOut())).?.width) return error.InvalidWethg;
-        if (setting.w <= 0) return error.InvalidWethg;
+        if (setting.w < 2 and setting.h < 2) return error.InvalidSize;
 
         const rows = Row.Row.init(allocator);
         const num_rows = NumRow.NumRow.init(allocator);
