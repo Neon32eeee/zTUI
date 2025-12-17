@@ -16,8 +16,11 @@ jobs:
         with:
           version: 0.14.1
 
-      - name: Run zTUI Example (runtime check on Windows console)
+      - name: Build
         shell: bash
         run: |
           zig build-exe src/test.zig -O Debug
-	  .\test.exe
+      - name: Run
+        shell: bash
+        run: |
+          ./test.exe
