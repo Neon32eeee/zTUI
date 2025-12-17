@@ -19,29 +19,4 @@ jobs:
       - name: Run zTUI Example (runtime check on Windows console)
         shell: bash
         run: |
-          zig run - <<'EOF'
-          const std = @import("std");
-          const ztui = @import("src/main.zig");
-
-          pub fn main() !void {
-              var win = try ztui.tui().init(.{ .w = 60, .h = 20 }, std.heap.page_allocator);
-              defer win.deinit();
-
-              try win.appendRow("zTUI runtime test on REAL Windows!", .{});
-              try win.appendRow("If no crash - init/draw OK", .{});
-              try win.appendProgressBar(80);
-
-              try win.inputInit(.{ .prompt = "Test > " });
-
-              win.draw();
-
-              var buff: [256]u8 = undefined;
-              const input = win.hearing(&buff) catch |err| {
-                  std.debug.print("Input error (no keyboard in CI - expected): {}\n", .{err});
-                  return;
-              };
-
-              try win.appendRow("Typed: {s}", .{input});
-              win.draw();
-          }
-          EOF
+          zig run src/test.zig
