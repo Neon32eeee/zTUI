@@ -17,7 +17,9 @@ zTUI is an open-source library for TUI, with support for user input systems.
 ## Support
 
 zig version: `0.14.1`
+
 OS:
+
     - Linux: `100%`
     - OS X: `100%`
     - Windows: ?
