@@ -385,6 +385,16 @@ This is a function that takes no arguments but returns the current size (width) 
 - prompt
 - input_entry
 
+#### General API 
+
+#### Func :
+- tui
+- getTrminalWidth
+- getTrminalHeigth
+
+#### Consts :
+- TUIType
+
 ## TODO (0.0.7)
 
 - [x] Rename 'ProgressBarClearSettings' - > 'ClearSettings' in 'Settings' modul
