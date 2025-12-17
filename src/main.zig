@@ -2,6 +2,8 @@ const std = @import("std");
 const TUI = @import("TUI.zig");
 const Terminal = @import("Termimal.zig");
 
+pub const TUIType = TUI.TUI;
+
 pub fn tui() type {
     return TUI.TUI;
 }
