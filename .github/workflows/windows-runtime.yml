@@ -1,9 +1,9 @@
 name: zTUI Runtime Test on Real Windows
 
 on:
+  workflow_dispatch:
   push:
   pull_request:
-  workflow_dispatch:
 
 jobs:
   windows-test:
@@ -12,36 +12,36 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Setup Zig
-        uses: goto-bus-stop/setup-zig@v2
+        uses: mlugg/setup-zig@v1
         with:
           version: 0.14.1
 
-      - name: Run Simple zTUI Example (init + draw + inputInit + hearing)
-      	shell: bash
+      - name: Run zTUI Example (runtime check on Windows console)
+        shell: bash
         run: |
-          zig run - << 'EOF'
+          zig run - <<'EOF'
           const std = @import("std");
           const ztui = @import("src/main.zig");
 
           pub fn main() !void {
-              var win = try ztui.tui().init(.{ .w = 50, .h = 15 }, std.heap.page_allocator);
+              var win = try ztui.tui().init(.{ .w = 60, .h = 20 }, std.heap.page_allocator);
               defer win.deinit();
 
               try win.appendRow("zTUI runtime test on REAL Windows!", .{});
+              try win.appendRow("If no crash - init/draw OK", .{});
+              try win.appendProgressBar(80);
 
-              try win.appendProgressBar(60);
+              try win.inputInit(.{ .prompt = "Test > " });
 
-              try win.inputInit(.{ .prompt = "Test input > " });
+              win.draw();
 
-              win.draw();  # отрисовка
-
-              var buff: [128]u8 = undefined;
+              var buff: [256]u8 = undefined;
               const input = win.hearing(&buff) catch |err| {
-                  std.debug.print("Input error (expected in CI, no keyboard): {}\n", .{err});
+                  std.debug.print("Input error (no keyboard in CI - expected): {}\n", .{err});
                   return;
               };
 
-              try win.appendRow("You typed: {s}", .{input});
+              try win.appendRow("Typed: {s}", .{input});
               win.draw();
           }
           EOF
