@@ -97,11 +97,11 @@ pub const ProgressBar = struct {
         var line = try self.allocator.alloc(u8, used_len);
         @memset(line, ' ');
 
-        const complited: usize = prochent % if (8 >= w and w < 14) @as(usize, 25)
+        const complited: usize = prochent / if (8 >= w and w < 14) @as(usize, 25)
         		else if (w >= 14 and w < 104)
         			@as(usize, 10)
         		else
-        			@as(usize, 100);
+        			@as(usize, 1);
 
         for (0..bar_len) |i| {
             line[i] = if (complited > i) '#' else '-';
