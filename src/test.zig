@@ -2,7 +2,7 @@ const std = @import("std");
 const ztui = @import("main.zig");
 
 pub fn main() !void {
-    var win = try ztui.tui().init(.{ .w = try ztui.getTerminalWidth(), .h = try ztui.getTerminalHeigth() }, std.heap.page_allocator);
+    var win = try ztui.tui().init(.{ .w = 40, .h = 40 }, std.heap.page_allocator);
     defer win.deinit();
 
     try win.inputInit(.{ .prompt = "Hello" });
