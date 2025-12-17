@@ -1,0 +1,46 @@
+name: zTUI Runtime Test on Real Windows
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  windows-test:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Zig
+        uses: mlugg/setup-zig@v1
+        with:
+          version: 0.14.1
+
+      - name: Run Simple zTUI Example (init + draw + inputInit + hearing)
+        run: |
+          zig run - <<EOF
+          const std = @import("std");
+          const ztui = @import("src/main.zig");
+
+          pub fn main() !void {
+              var win = try ztui.tui().init(.{ .w = 50, .h = 15 }, std.heap.page_allocator);
+              defer win.deinit();
+
+              try win.appendRow("zTUI runtime test on REAL Windows!", .{});
+
+              try win.appendProgressBar(60);
+
+              try win.inputInit(.{ .prompt = "Test input > " });
+
+              win.draw();  # отрисовка
+
+              var buff: [128]u8 = undefined;
+              const input = win.hearing(&buff) catch |err| {
+                  std.debug.print("Input error (expected in CI, no keyboard): {}\n", .{err});
+                  return;
+              };
+
+              try win.appendRow("You typed: {s}", .{input});
+              win.draw();
+          }
+          EOF
