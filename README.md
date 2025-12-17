@@ -14,6 +14,14 @@ zTUI is an open-source library for TUI, with support for user input systems.
 ╰────────────────────────────╯
 ```
 
+## Support
+
+zig version: `0.14.1`
+OS:
+    - Linux: `100%`
+    - OS X: `100%`
+    - Windows: ?
+
 ## How to Install
 Installation via fetch
 ```
@@ -144,7 +152,7 @@ The `appendRow` method accepts 2 argument, which is the string we want to add. F
 
 ---
 
-Example with numbered lines  
+Example with numbered lines 
 ```zig
 const std =@import("std");
 const ztui = @import("ztui");
