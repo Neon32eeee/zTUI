@@ -17,8 +17,9 @@ jobs:
           version: 0.14.1
 
       - name: Run Simple zTUI Example (init + draw + inputInit + hearing)
+      	shell: bash
         run: |
-          zig run - <<EOF
+          zig run - << 'EOF'
           const std = @import("std");
           const ztui = @import("src/main.zig");
 
