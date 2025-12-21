@@ -27,7 +27,7 @@ pub const TUI = struct {
 
         const max_width = if (term_size) |size| size.width else 150;
 
-    		if (setting.w > max_width) return error.InvalidWethg;
+        if (setting.w > max_width) return error.InvalidWethg;
         if (setting.w < 2 and setting.h < 2) return error.InvalidSize;
 
         const rows = Row.Row.init(allocator);
@@ -76,19 +76,19 @@ pub const TUI = struct {
     }
 
     pub fn clearRow(self: *Self, settings: Settings.ClearSettings) void {
-    		if (settings.index) |i| {
-        		self.row.clearIndex(i);
-    		} else {
-    			self.row.clearAll();
-    		}
+        if (settings.index) |i| {
+            self.row.clearIndex(i);
+        } else {
+            self.row.clearAll();
+        }
     }
 
     pub fn clearNumRow(self: *Self, settings: Settings.ClearSettings) void {
         if (settings.index) |i| {
-        		self.num_row.clearIndex(i);
-    		} else {
-    			self.num_row.clearAll();
-    		}
+            self.num_row.clearIndex(i);
+        } else {
+            self.num_row.clearAll();
+        }
     }
 
     pub fn setRow(self: Self, index: usize, new_row: []const u8, settings: Settings.RowSettings) !void {
@@ -151,6 +151,20 @@ pub const TUI = struct {
         return width;
     }
 
+    fn drawRows(rows: anytype, w: usize, h: usize, printed_lines: usize) void {
+        for (rows.items) |row| {
+            if (printed_lines >= h - 2) break;
+            for (row.items) |line| {
+                if (printed_lines >= h - 2) break;
+                std.debug.print("│{s}", .{line});
+                const len = displayWidth(line);
+                for (len..w - 2) |_| std.debug.print(" ", .{});
+                std.debug.print("│\n", .{});
+                printed_lines.* += 1;
+            }
+        }
+    }
+
     pub fn draw(self: *const Self) void {
         std.debug.print("z\x1B[2J\x1B[3J\x1B[H", .{});
 
@@ -169,29 +183,8 @@ pub const TUI = struct {
 
         var printed_lines: usize = 0;
 
-        for (self.row.rows.items) |row| {
-            if (printed_lines >= self.h - 2) break;
-            for (row.items) |line| {
-                if (printed_lines >= self.h - 2) break;
-                std.debug.print("│{s}", .{line});
-                const len = displayWidth(line);
-                for (len..self.w - 2) |_| std.debug.print(" ", .{});
-                std.debug.print("│\n", .{});
-                printed_lines += 1;
-            }
-        }
-
-        for (self.num_row.rows.items) |row| {
-            if (printed_lines >= self.h - 2) break;
-            for (row.items) |line| {
-                if (printed_lines >= self.h - 2) break;
-                std.debug.print("│{s}", .{line});
-                const len = displayWidth(line);
-                for (len..self.w - 2) |_| std.debug.print(" ", .{});
-                std.debug.print("│\n", .{});
-                printed_lines += 1;
-            }
-        }
+        drawRows(self.row.rows, self.h, self.w, &printed_lines);
+        drawRows(self.num_row.rows, self.w, self.h, &printed_lines);
 
         for (self.progress_bar.progress_bars.items) |progress_bar| {
             if (printed_lines >= self.h - 2) break;
