@@ -216,7 +216,7 @@ pub fn main() !void {
 
 1. `try win.appendProgressBar(0);`
 
-Creates a progress bar at 0%, the value cannot exceed 100.
+Creates a progress bar at 0%, the value cannot exceed 100. It also adjusts to the size of the window itself, that is, there are only 3 sizes: 4, 10 and 100 ind.
 
 2. `try win.setProgressBar(i, 0);`
 
