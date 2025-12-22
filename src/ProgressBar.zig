@@ -50,9 +50,9 @@ pub const ProgressBar = struct {
         
         const complited: usize = prochent / if (8 >= w and w < 14) @as(usize, 25)
             else if (w >= 14 and w < 104)
-                                @as(usize, 10)
+               @as(usize, 10)
             else
-                                @as(usize, 1);
+                @as(usize, 1);
 
         for (0..bar_len) |i| {
             line[i] = if (complited > i) '#' else '-';
