@@ -47,32 +47,18 @@ pub const ProgressBar = struct {
         var line = try self.allocator.alloc(u8, used_len);
         @memset(line, ' ');
 
-        if (w >= 8 and w < 14) {
-            const complited: usize = prochent / 25;
+        
+                const complited: usize = prochent / if (8 >= w and w < 14) @as(usize, 25)
+                        else if (w >= 14 and w < 104)
+                                @as(usize, 10)
+                        else
+                                @as(usize, 1);
 
-            inline for (0..4) |i| {
-                line[i] = if (complited > i) '#' else '-';
-            }
-
-            writeProchent(line, prochent, 4);
-        }
-        if (w >= 14 and w < 104) {
-            const complited: usize = prochent / 10;
-
-            inline for (0..10) |i| {
-                line[i] = if (complited > i) '#' else '-';
-            }
-
-            writeProchent(line, prochent, 10);
+        for (0..bar_len) |i| {
+            line[i] = if (complited > i) '#' else '-';
         }
 
-        if (w >= 104) {
-            inline for (0..100) |i| {
-                line[i] = if (prochent > i) '#' else '-';
-            }
-
-            writeProchent(line, prochent, 100);
-        }
+        writeProchent(line, prochent, bar_len);
 
         try self.progress_bars.append(line[0..]);
     }
