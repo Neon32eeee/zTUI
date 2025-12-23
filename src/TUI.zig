@@ -153,9 +153,9 @@ pub const TUI = struct {
 
     fn drawRows(rows: anytype, w: usize, h: usize, printed_lines: *usize) void {
         for (rows.items) |row| {
-            if (printed_lines >= h - 2) break;
+            if (printed_lines.* >= h - 2) break;
             for (row.items) |line| {
-                if (printed_lines >= h - 2) break;
+                if (printed_lines.* >= h - 2) break;
                 std.debug.print("│{s}", .{line});
                 const len = displayWidth(line);
                 for (len..w - 2) |_| std.debug.print(" ", .{});
