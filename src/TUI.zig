@@ -183,7 +183,7 @@ pub const TUI = struct {
 
         var printed_lines: usize = 0;
 
-        drawRows(self.row.rows, self.h, self.w, &printed_lines);
+        drawRows(self.row.rows, self.w, self.h, &printed_lines);
         drawRows(self.num_row.rows, self.w, self.h, &printed_lines);
 
         for (self.progress_bar.progress_bars.items) |progress_bar| {
