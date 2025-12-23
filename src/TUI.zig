@@ -28,7 +28,7 @@ pub const TUI = struct {
         const max_width = if (term_size) |size| size.width else 150;
 
         if (setting.w > max_width) return error.InvalidWethg;
-        if (setting.w < 2 and setting.h < 2) return error.InvalidSize;
+        if (setting.w < 2 or setting.h < 2) return error.InvalidSize;
 
         const rows = Row.Row.init(allocator);
         const num_rows = NumRow.NumRow.init(allocator);
