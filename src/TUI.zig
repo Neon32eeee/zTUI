@@ -151,7 +151,7 @@ pub const TUI = struct {
         return width;
     }
 
-    fn drawRows(rows: anytype, w: usize, h: usize, printed_lines: usize) void {
+    fn drawRows(rows: anytype, w: usize, h: usize, printed_lines: *usize) void {
         for (rows.items) |row| {
             if (printed_lines >= h - 2) break;
             for (row.items) |line| {
