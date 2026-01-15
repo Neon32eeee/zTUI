@@ -27,7 +27,7 @@ OS:
 ## How to Install
 Installation via fetch
 ```
-zig fetch --save https://github.com/Neon32eeee/zTUI/archive/refs/tags/0.0.6.tar.gz
+zig fetch --save https://github.com/Neon32eeee/zTUI/archive/refs/tags/0.1.0.tar.gz
 ```
 
 add for build.zig
