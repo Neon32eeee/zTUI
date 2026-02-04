@@ -13,11 +13,11 @@ fn wordWidth(word: []const u8) usize {
 
 pub fn wrapText(w: usize, t: []const u8, allocator: std.mem.Allocator) !std.ArrayList([]const u8) {
     var it = std.mem.splitScalar(u8, t, ' ');
-    var corrent_row = std.ArrayList([]const u8).init(allocator);
+    var corrent_row = std.ArrayList([]const u8){};
 
-    var line_buff = std.ArrayList(u8).init(allocator);
+    var line_buff = std.ArrayList(u8){};
 
-    const writer = line_buff.writer();
+    const writer = line_buff.writer(allocator);
 
     const len_none: usize = 1;
     var last_w: usize = w;
@@ -35,20 +35,20 @@ pub fn wrapText(w: usize, t: []const u8, allocator: std.mem.Allocator) !std.Arra
             last_w -= final_word_len;
         } else {
             if (line_buff.items.len > 0) {
-                const final_line = try line_buff.toOwnedSlice();
-                try corrent_row.append(final_line);
+                const final_line = try line_buff.toOwnedSlice(allocator);
+                try corrent_row.append(allocator, final_line);
             }
 
             line_buff.items.len = 0;
-            try line_buff.appendSlice(word);
+            try line_buff.appendSlice(allocator, word);
 
             last_w = w - len;
         }
     }
 
     if (line_buff.items.len > 0) {
-        const final_line = try line_buff.toOwnedSlice();
-        try corrent_row.append(final_line);
+        const final_line = try line_buff.toOwnedSlice(allocator);
+        try corrent_row.append(allocator, final_line);
     }
 
     return corrent_row;

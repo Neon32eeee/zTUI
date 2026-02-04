@@ -7,7 +7,7 @@ pub const ProgressBar = struct {
     const Self = @This();
 
     pub fn init(allocator: std.mem.Allocator) Self {
-        const progress_bars = std.ArrayList([]const u8).init(allocator);
+        const progress_bars = std.ArrayList([]const u8){};
 
         const self = Self{ .progress_bars = progress_bars, .allocator = allocator };
 
@@ -47,12 +47,10 @@ pub const ProgressBar = struct {
         var line = try self.allocator.alloc(u8, used_len);
         @memset(line, ' ');
 
-        
-        const complited: usize = prochent / if (8 >= w and w < 14) @as(usize, 25)
-            else if (w >= 14 and w < 104)
-               @as(usize, 10)
-            else
-                @as(usize, 1);
+        const complited: usize = prochent / if (8 >= w and w < 14) @as(usize, 25) else if (w >= 14 and w < 104)
+            @as(usize, 10)
+        else
+            @as(usize, 1);
 
         for (0..bar_len) |i| {
             line[i] = if (complited > i) '#' else '-';
@@ -60,11 +58,11 @@ pub const ProgressBar = struct {
 
         writeProchent(line, prochent, bar_len);
 
-        try self.progress_bars.append(line[0..]);
+        try self.progress_bars.append(self.allocator, line[0..]);
     }
 
     pub fn clearAll(self: *Self) void {
-        self.progress_bars.clearAndFree();
+        self.progress_bars.clearAndFree(self.allocator);
     }
 
     pub fn clearIndex(self: *Self, i: usize) void {
@@ -83,11 +81,10 @@ pub const ProgressBar = struct {
         var line = try self.allocator.alloc(u8, used_len);
         @memset(line, ' ');
 
-        const complited: usize = prochent / if (8 >= w and w < 14) @as(usize, 25)
-        		else if (w >= 14 and w < 104)
-        			@as(usize, 10)
-        		else
-        			@as(usize, 1);
+        const complited: usize = prochent / if (8 >= w and w < 14) @as(usize, 25) else if (w >= 14 and w < 104)
+            @as(usize, 10)
+        else
+            @as(usize, 1);
 
         for (0..bar_len) |i| {
             line[i] = if (complited > i) '#' else '-';

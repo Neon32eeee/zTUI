@@ -10,7 +10,7 @@ pub const NumRow = struct {
     const Self = @This();
 
     pub fn init(allocator: std.mem.Allocator) Self {
-        const row = std.ArrayList(std.ArrayList([]const u8)).init(allocator);
+        const row = std.ArrayList(std.ArrayList([]const u8)){};
 
         const self = Self{ .rows = row, .allocator = allocator };
 
@@ -25,14 +25,14 @@ pub const NumRow = struct {
                 allocator.free(line);
             }
 
-            row_list.deinit();
+            row_list.deinit(self.allocator);
         }
 
-        self.rows.deinit();
+        self.rows.deinit(self.allocator);
     }
 
     fn wordProcessing(allocator: std.mem.Allocator, text: []const u8, settings: Settings.RowSettings, w: usize, i: usize) !std.ArrayList([]const u8) {
-    		const wrapped = try Word.wrapText(w - 2, text, allocator);
+        const wrapped = try Word.wrapText(w - 2, text, allocator);
         var numbered = std.ArrayList([]const u8).init(allocator);
 
         const idx = i;
@@ -48,14 +48,14 @@ pub const NumRow = struct {
             const color_text = try Color.colorize(inc_text, settings.color, allocator);
             return color_text;
         } else {
-			return inc_text;
+            return inc_text;
         }
     }
 
     pub fn append(self: *Self, w: usize, row: []const u8, settings: Settings.RowSettings) !void {
-		const text = try wordProcessing(self.allocator, row, settings, w, self.rows.items.len + 1);
+        const text = try wordProcessing(self.allocator, row, settings, w, self.rows.items.len + 1);
 
-		try self.rows.append(text);
+        try self.rows.append(text);
     }
 
     pub fn clearAll(self: *Self) void {
@@ -69,24 +69,24 @@ pub const NumRow = struct {
     }
 
     pub fn clearIndex(self: *Self, i: usize) void {
-    		for (self.rows.items[i].items) |line| {
-    			self.allocator.free(line);
-    		}
-    		self.rows.items[i].deinit();
-    		_ = self.rows.orderedRemove(i);
-    	}
+        for (self.rows.items[i].items) |line| {
+            self.allocator.free(line);
+        }
+        self.rows.items[i].deinit();
+        _ = self.rows.orderedRemove(i);
+    }
 
     pub fn setNumRow(self: *Self, w: usize, index: usize, new_row: []const u8, settings: Settings.RowSettings) !void {
-		if (index >= self.rows.items.len) return error.InvalidSetIndex;
+        if (index >= self.rows.items.len) return error.InvalidSetIndex;
 
-		var old = self.rows.items[index];
+        var old = self.rows.items[index];
         for (old.items) |line| {
-        	self.allocator.free(line);
+            self.allocator.free(line);
         }
         old.deinit();
 
-		const text = try wordProcessing(self.allocator, new_row, settings, w, index + 1);
+        const text = try wordProcessing(self.allocator, new_row, settings, w, index + 1);
 
-    	self.rows.items[index] = text;
+        self.rows.items[index] = text;
     }
 };

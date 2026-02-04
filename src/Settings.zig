@@ -13,4 +13,4 @@ pub const ColorSettings = struct { color: Color.ColorName = .none };
 
 pub const RowSettings = struct { color: Color.ColorName = .none, indentation: usize = 0 };
 
-pub const ClearSettings = struct { index: ?usize = null};
+pub const ClearSettings = struct { index: ?usize = null };

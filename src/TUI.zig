@@ -18,12 +18,12 @@ pub const TUI = struct {
     progress_bar: ProgressBar.ProgressBar,
 
     prompt: []const u8,
-    input_entry: Input.Input,
+    input_entry: Input.Input = undefined,
 
     const Self = @This();
 
     pub fn init(setting: Settings.TUISettings, allocator: std.mem.Allocator) !Self {
-        const term_size = try @import("Termimal.zig").getTerminalSize(std.io.getStdOut());
+        const term_size = try @import("Termimal.zig").getTerminalSize(std.fs.File.stdout());
 
         const max_width = if (term_size) |size| size.width else 150;
 
@@ -33,9 +33,8 @@ pub const TUI = struct {
         const rows = Row.Row.init(allocator);
         const num_rows = NumRow.NumRow.init(allocator);
         const progress_bar = ProgressBar.ProgressBar.init(allocator);
-        const input_entry: Input.Input = Input.Input.init();
 
-        const self = Self{ .w = setting.w, .h = setting.h, .name = setting.name, .enable_input = false, .row = rows, .num_row = num_rows, .progress_bar = progress_bar, .input_entry = input_entry, .prompt = "", .allocator = allocator };
+        const self = Self{ .w = setting.w, .h = setting.h, .name = setting.name, .enable_input = false, .row = rows, .num_row = num_rows, .progress_bar = progress_bar, .prompt = "", .allocator = allocator };
 
         return self;
     }
@@ -46,25 +45,22 @@ pub const TUI = struct {
         self.progress_bar.deinit();
     }
 
-    pub fn inputInit(self: *Self, setting: Settings.InputSettings) !void {
+    pub fn inputInit(self: *Self, setting: Settings.InputSettings, buffer: []u8) !void {
         self.enable_input = true;
 
         if (setting.color_promt != .none) {
             const color_prompt = try Color.colorize_text(setting.prompt, setting.color_promt, self.allocator);
             self.prompt = color_prompt;
         } else {
+            self.input_entry = Input.Input.init(buffer[0..]);
             self.prompt = setting.prompt;
         }
     }
 
-    pub fn hearing(self: *const Self, buffer: []u8) ![]const u8 {
-        const result = try self.input_entry.hearing(buffer);
-
-        if (result.len == 0) {
-            return "";
-        }
-
-        return result;
+    pub fn hearing(self: *Self) ![]const u8 {
+        const input = try (&self.input_entry).hearing();
+        if (input.len == 0) return "";
+        return std.mem.trimRight(u8, input, "\r\n");
     }
 
     pub fn appendRow(self: *Self, row: []const u8, settings: Settings.RowSettings) !void {

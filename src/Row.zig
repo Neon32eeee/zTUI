@@ -10,7 +10,7 @@ pub const Row = struct {
     const Self = @This();
 
     pub fn init(allocator: std.mem.Allocator) Self {
-        const row = std.ArrayList(std.ArrayList([]const u8)).init(allocator);
+        const row = std.ArrayList(std.ArrayList([]const u8)){};
 
         const self = Self{ .rows = row, .allocator = allocator };
 
@@ -32,49 +32,48 @@ pub const Row = struct {
     }
 
     fn wordProcessing(allocator: std.mem.Allocator, text: []const u8, settings: Settings.RowSettings, w: usize) !std.ArrayList([]const u8) {
-    		const t = try Word.wrapText(w - 2, text, allocator);
+        const t = try Word.wrapText(w - 2, text, allocator);
 
-        const inc_text = try Word.applyIndentation(allocator, t, settings.indentation);
+        var inc_text = try Word.applyIndentation(allocator, t, settings.indentation);
 
         if (settings.color != .none) {
-            const color_text = try Color.colorize(inc_text, settings.color, allocator);
+            const color_text = try Color.colorize(&inc_text, settings.color, allocator);
             return color_text;
         } else {
-        	return inc_text;
+            return inc_text;
         }
     }
-
 
     pub fn append(self: *Self, w: usize, row: []const u8, settings: Settings.RowSettings) !void {
         const text = try wordProcessing(self.allocator, row, settings, w);
 
-        try self.rows.append(text);
+        try self.rows.append(self.allocator, text);
     }
 
     pub fn clearAll(self: *Self) void {
-        for (self.rows.items) |row_list| {
+        for (self.rows.items) |*row_list| {
             for (row_list.items) |line| {
                 self.allocator.free(line);
             }
-            row_list.deinit();
+            _ = row_list.deinit(self.allocator);
         }
-        self.rows.clearAndFree();
+        self.rows.clearAndFree(self.allocator);
     }
 
     pub fn clearIndex(self: *Self, i: usize) void {
-    		for (self.rows.items[i].items) |line| {
-    			self.allocator.free(line);
-    		}
-    		self.rows.items[i].deinit();
-    		_ = self.rows.orderedRemove(i);
-    	}
+        for (self.rows.items[i].items) |line| {
+            self.allocator.free(line);
+        }
+        self.rows.items[i].deinit(self.allocator);
+        _ = self.rows.orderedRemove(i);
+    }
 
     pub fn setRow(self: *Self, w: usize, index: usize, new_row: []const u8, settings: Settings.RowSettings) !void {
         if (index >= self.rows.items.len) return error.InvalidSetIndex;
 
         var old = self.rows.items[index];
         for (old.items) |line| {
-        		self.allocator.free(line);
+            self.allocator.free(line);
         }
         old.deinit();
 

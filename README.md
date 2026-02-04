@@ -16,7 +16,7 @@ zTUI is an open-source library for TUI, with support for user input systems.
 
 ## Support
 
-zig version: `0.14.1`
+zig version: `0.15.1`
 
 OS:
 
@@ -27,7 +27,7 @@ OS:
 ## How to Install
 Installation via fetch
 ```
-zig fetch --save https://github.com/Neon32eeee/zTUI/archive/refs/tags/0.1.0.tar.gz
+zig fetch --save https://github.com/Neon32eeee/zTUI/archive/refs/tags/0.1.1.tar.gz
 ```
 
 add for build.zig
@@ -38,9 +38,8 @@ pub fn build(b: *std.Build) void {
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
 
-    const exe = b.addExecutable(.{
-        .name = "myproject",
-        .root_source_file = b.path("src/main.zig"),
+    const exe = b.addModule("myproject", .{
+        .root_source_file = b.path("src/root.zig"),
         .target = target,
         .optimize = optimize,
     });
@@ -55,6 +54,7 @@ pub fn build(b: *std.Build) void {
     exe.root_module.addImport("ztui", ztui_module);
 
     b.installArtifact(exe);
+}
 ```
 
 ## Project API
@@ -267,12 +267,12 @@ pub fn main() !void {
     var win = try ztui.tui().init(.{.w = 30, .h = 10}, std.heap.page_allocator);
     defer win.deinit();
 
-    try win.inputInit(.{.prompt = "Hello"});
+    var buff: [32]u8 = undefined;
+
+    try win.inputInit(.{.prompt = "Hello"}, &buff);
 
     win.draw();
-
-    var buff: [32]u8 = undefined;
-    const answer = try win.hearing(&buff);
+    const answer = try win.hearing();
 
     if (std.mem.eql(u8, answer, "hi")) {
         try win.appendRow("input system works!", .{});
@@ -284,13 +284,13 @@ pub fn main() !void {
 
 ### Analysis
 
-#### 1.`try win.inputInit(.{.prompt = "Hello"});`
+#### 1.`try win.inputInit(.{.prompt = "Hello"}, &buff);`
 Here we initialize the input system so that we can listen for user input in the future. The method itself accepts input system settings, which include:
 
 - `prompt` - this is the prompt for the user that appears at the end and next to the input field.
 - `color_prompt` - This parameter defines the value for the prompt. The colors are the same as in Row.
   
-#### 2.`const answer = try win.hearing(&buff);`
+#### 2.`const answer = try win.hearing();`
 Here we call the method on the structure that listens for user input. Once the user enters text, it returns the input. The method accepts a buffer, which should ideally be sized to match the presumed maximum input size to avoid taking up too much memory.
 
 ### Expected Output
@@ -395,10 +395,8 @@ This is a function that takes no arguments but returns the current size (width) 
 #### Consts :
 - TUIType
 
-## TODO (0.0.7)
+## TODO (0.1.2)
 
-- [x] Rename 'ProgressBarClearSettings' - > 'ClearSettings' in 'Settings' modul
-- [x] Add helping arg 'settings' for func 'clearRow' & 'clearNumRow' 
 
 ## License
 
