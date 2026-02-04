@@ -3,6 +3,7 @@ const ztui = @import("root.zig");
 
 pub fn main() !void {
     var win = try ztui.tui().init(.{ .w = try ztui.getTerminalWidth(), .h = try ztui.getTerminalHeigth() }, std.heap.page_allocator);
+    defer win.deinit();
 
     var buff: [1024]u8 = undefined;
 

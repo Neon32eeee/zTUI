@@ -17,18 +17,18 @@ pub const Row = struct {
         return self;
     }
 
-    pub fn deinit(self: Self) void {
+    pub fn deinit(self: *Self) void {
         const allocator = self.allocator;
 
-        for (self.rows.items) |row_list| {
+        for (self.rows.items) |*row_list| {
             for (row_list.items) |line| {
                 allocator.free(line);
             }
 
-            row_list.deinit();
+            row_list.deinit(self.allocator);
         }
 
-        self.rows.deinit();
+        self.rows.deinit(self.allocator);
     }
 
     fn wordProcessing(allocator: std.mem.Allocator, text: []const u8, settings: Settings.RowSettings, w: usize) !std.ArrayList([]const u8) {

@@ -17,10 +17,10 @@ pub const NumRow = struct {
         return self;
     }
 
-    pub fn deinit(self: Self) void {
+    pub fn deinit(self: *Self) void {
         const allocator = self.allocator;
 
-        for (self.rows.items) |row_list| {
+        for (self.rows.items) |*row_list| {
             for (row_list.items) |line| {
                 allocator.free(line);
             }

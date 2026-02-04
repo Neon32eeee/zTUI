@@ -15,7 +15,7 @@ pub const ProgressBar = struct {
     }
 
     pub fn deinit(self: *Self) void {
-        self.progress_bars.deinit();
+        self.progress_bars.deinit(self.allocator);
     }
 
     fn writeProchent(line: []u8, prochent: usize, bigin_index: usize) void {
