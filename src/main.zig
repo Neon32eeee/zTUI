@@ -9,7 +9,7 @@ pub fn main() !void {
 
     try win.inputInit(.{ .prompt = "Hello" }, &buff);
 
-    win.draw();
+    try win.draw();
 
     const answer = try win.hearing();
 
@@ -17,16 +17,16 @@ pub fn main() !void {
         try win.appendRow("zTUI test text", .{ .color = .blue });
         try win.appendRow("zTUI test text", .{ .color = .blue });
 
-        win.draw();
+        try win.draw();
 
         win.clearRow(.{});
         try win.appendProgressBar(0);
 
-        win.draw();
+        try win.draw();
 
         for (0..101) |p| {
             try win.setProgressBar(p, 0);
-            win.draw();
+            try win.draw();
             std.Thread.sleep(std.time.ns_per_s);
         }
 
@@ -34,10 +34,10 @@ pub fn main() !void {
         win.rename("Echo");
         try win.reprompt("echo", .{ .color = .green });
 
-        win.draw();
+        try win.draw();
 
         const a2 = try win.hearing();
         try win.appendRow(a2, .{ .color = .green });
-        win.draw();
+        try win.draw();
     }
 }
