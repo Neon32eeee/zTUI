@@ -76,7 +76,7 @@ pub fn main() !void {
     const win = try ztui.tui().init(.{.w = 20, .h = 10}, std.heap.page_allocator);
     defer win.deinit();
 
-    win.draw();
+    try try win.draw();
 }
 ```
 ### Analysis
@@ -93,7 +93,7 @@ Here we declare a constant into which we initialize our application window. The 
 
 The second argument is the allocator.
 
-#### 2. `win.draw();`
+#### 2. `try try win.draw();`
 Here we call the method on the structure that draws the window in the terminal.
 
 ### Expected Output
@@ -127,14 +127,14 @@ pub fn main() !void {
 
     try win.appendRow("zTUI test text!", .{});
 
-    win.draw();
+    try win.draw();
 }
 ```
 
 ### Analysis
 
 #### `try win.appendRow("zTUI test text!", .{});`
-The `appendRow` method accepts 2 argument, which is the string we want to add. First, it breaks the text and wraps words if necessary, but if a word is longer than the width itself, an error will be issued. It simply adds this edited string to `win.rows`, which stores these strings, and the `win.draw();` method renders them in order from the 0th element to the last.  The second argument is responsible for the settings:
+The `appendRow` method accepts 2 argument, which is the string we want to add. First, it breaks the text and wraps words if necessary, but if a word is longer than the width itself, an error will be issued. It simply adds this edited string to `win.rows`, which stores these strings, and the `try win.draw();` method renders them in order from the 0th element to the last.  The second argument is responsible for the settings:
 
 - color:
   - `red`
@@ -174,7 +174,7 @@ pub fn main() !void {
 
     try win.appendNumRow("zTUI test text!", .{});
 
-    win.draw();
+    try win.draw();
 }
 ```
 
@@ -216,7 +216,7 @@ pub fn main() !void {
     for (0..100) |i| {
         try win.setProgressBar(i, 0);
         std.time.sleep(std.time.ns_per_s);
-        win.draw();
+        try win.draw();
     }
 }
 ```
@@ -280,12 +280,12 @@ pub fn main() !void {
 
     try win.inputInit(.{.prompt = "Hello"}, &buff);
 
-    win.draw();
+    try win.draw();
     const answer = try win.hearing();
 
     if (std.mem.eql(u8, answer, "hi")) {
         try win.appendRow("input system works!", .{});
-        win.draw();
+        try win.draw();
     }
 
 }
@@ -347,7 +347,7 @@ const ztui = @import("ztui")
 pub fn main() !void {
     const win = ztui.tui().init(.{.w = try ztui.getTerminalWidth(), .h = try ztui.getTerminalHeigth()});
 
-    win.draw();
+    try win.draw();
 }
 ````
 

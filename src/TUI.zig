@@ -147,64 +147,73 @@ pub const TUI = struct {
         return width;
     }
 
-    fn drawRows(rows: anytype, w: usize, h: usize, printed_lines: *usize) void {
+    fn drawRows(rows: anytype, w: usize, h: usize, printed_lines: *usize, writer: *std.io.Writer) !void {
         for (rows.items) |row| {
             if (printed_lines.* >= h - 2) break;
             for (row.items) |line| {
                 if (printed_lines.* >= h - 2) break;
-                std.debug.print("│{s}", .{line});
+                try writer.print("│{s}", .{line});
                 const len = displayWidth(line);
-                for (len..w - 2) |_| std.debug.print(" ", .{});
-                std.debug.print("│\n", .{});
+                for (len..w - 2) |_| try writer.writeAll(" ");
+                try writer.writeAll("│\n");
                 printed_lines.* += 1;
             }
         }
     }
 
-    pub fn draw(self: *const Self) void {
-        std.debug.print("z\x1B[2J\x1B[3J\x1B[H", .{});
+    pub fn draw(self: *const Self) !void {
+        var stdout = std.fs.File.stdout();
 
-        std.debug.print("╭", .{});
+        var buff = try self.allocator.alloc(u8, self.w * self.h * 2);
+        defer self.allocator.free(buff);
+
+        var writer = stdout.writer(buff[0..]);
+
+        var w = &writer.interface;
+        try w.writeAll("z\x1B[2J\x1B[3J\x1B[H");
+
+        try w.writeAll("╭");
         for (0..(self.w - 2)) |_| {
-            std.debug.print("─", .{});
+            try w.writeAll("─");
         }
-        std.debug.print("╮\n", .{});
+        try w.writeAll("╮\n");
 
-        std.debug.print("│", .{});
-        std.debug.print("{s}", .{self.name});
+        try w.writeAll("│");
+        try w.print("{s}", .{self.name});
         for (0..(self.w - (2 + self.name.len))) |_| {
-            std.debug.print(" ", .{});
+            try w.writeAll(" ");
         }
-        std.debug.print("│\n", .{});
+        try w.writeAll("│\n");
 
         var printed_lines: usize = 0;
 
-        drawRows(self.row.rows, self.w, self.h, &printed_lines);
-        drawRows(self.num_row.rows, self.w, self.h, &printed_lines);
+        try drawRows(self.row.rows, self.w, self.h, &printed_lines, w);
+        try drawRows(self.num_row.rows, self.w, self.h, &printed_lines, w);
 
         for (self.progress_bar.progress_bars.items) |progress_bar| {
             if (printed_lines >= self.h - 2) break;
-            std.debug.print("│", .{});
+            try w.writeAll("│");
             const progress_bar_len = displayWidth(progress_bar);
-            for (0..self.w - 2 - progress_bar_len) |_| std.debug.print(" ", .{});
-            std.debug.print("{s}│\n", .{progress_bar});
+            for (0..self.w - 2 - progress_bar_len) |_| try w.writeAll(" ");
+            try w.print("{s}│\n", .{progress_bar});
             printed_lines += 1;
         }
 
         while (printed_lines < self.h - 2) : (printed_lines += 1) {
-            std.debug.print("│", .{});
-            for (0..self.w - 2) |_| std.debug.print(" ", .{});
-            std.debug.print("│\n", .{});
+            try w.writeAll("│");
+            for (0..self.w - 2) |_| try w.writeAll(" ");
+            try w.writeAll("│\n");
         }
 
-        std.debug.print("╰", .{});
+        try w.writeAll("╰");
         for (0..(self.w - 2)) |_| {
-            std.debug.print("─", .{});
+            try w.writeAll("─");
         }
-        std.debug.print("╯\n", .{});
+        try w.writeAll("╯\n");
 
         if (self.enable_input) {
-            std.debug.print("{s}| ", .{self.prompt});
+            try w.print("{s}| ", .{self.prompt});
         }
+        try w.flush();
     }
 };
